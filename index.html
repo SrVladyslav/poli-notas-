@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<!--/////////PAGE DESIGN///////////////-->
+	<meta charset="utf-8">
+	<title>poli[notas]</title>
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta content="poli[notas], tu calculadora de notas perfecta" name="description">
+	<!--Fav-->
+  <link href="img/logo/logo2_new_azul.png" rel="shortcut icon">
+	<!--/////////PAGE DESIGN END///////////-->
+
+	<!--//////////////FONTS////////////////-->
+	<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> 
+	<link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
+	<!--///////////FONTS END///////////////-->
+
+	<!--/////////////CSS///////////////////-->
+	<link rel="stylesheet" type="text/css" href="css/navbar_style.css">
+	<link rel="stylesheet" type="text/css" href="fonts/fuentes.css">
+	<!--Bootstrap-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<!--effects-->
+  	<link rel="stylesheet" type="text/css" href="css/effects.scss">
+	<!--/////////////CSS END///////////////-->
+	
+	<!--/////////////JS///////////////-->
+	<!--Slider-->
+	<script src="js/jquery.flexslider.js"></script>
+	<!--Calendar styles end-->
+	<script type="text/javascript" src="js/window-scroll.js"></script>
+
+	<script type="text/javascript">
+		/*function myFunction() {
+		  if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+		    document.getElementById("navbarf").className = "barra";
+		  } else {
+		    document.getElementById("navbarf").className = "";
+		  }
+		}*/
+	</script>
+	<link rel="stylesheet" href="nav_style.css">
+  <script src="sticky.js"></script>
+	<!--////////////JS END/////////////-->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+	
+	<!--HOME-->
+	<div id="home" class="container-fluid" style="z-index: 2;">
+		<div class="row">
+			
+			<div class="burger" style="position: fixed; z-index: 9999;">
+				<div class="lin1"></div>
+				<div class="lin2"></div>
+				<div class="lin3"></div>
+			</div>
+			<div class="col-md-2 col-0" id="menu">
+				<div>
+					<img src="./img/LogoUPV.png" alt="Logo" class="logo">
+				</div>
+				<div>
+					<img src="./img/polinotas.png" alt="Logo" class="logo">
+				</div>
+				<div class="menu_prop">
+					<ul	class="lin">
+						<li id="button_inicio" class="button_menu" onclick="selectDIV(1)">Inicio</li>
+					</ul>
+					<ul	class="lin">
+						<li id="button_asignatura" class="button_menu" onclick="selectDIV(2)">Asignaturas</li>
+					</ul>
+					<ul	class="lin">
+						<li id="button_add_asignatura" class="button_menu" onclick="selectDIV(3)">Crear asignatura</li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="col-md-10 col-12 programa" id="main">
+				<iframe id="iframe"
+				    width="100%"
+				    height="100vh"
+				    src="http://www.upv.es/">
+				</iframe> 
+			</div>
+
+			<div class="col-md-10 col-12 programa asignaturas_list_div" id="asignaturas">
+				<div class="asignaturas_title">
+					<h1 style="margin-top:5vh;">Asignaturas disponibles</h1>
+					<hr>
+				</div>
+				<ul id="asignaturas_list">
+					<li>Asignatura 1</li>
+					<li>Asignatura 2</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>ss</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+					<li>s</li>
+				</ul>
+			</div>
+
+			<div class="col-md-10 col-12 programa" id="creaAsignatura">
+				<div class="asignaturas_title">
+					<h1 style="margin-top:5vh;">Crear asignatura</h1>
+					<hr>						
+					<div class="row container-fluid" style="display:flex;">
+						<div class="col-md-3 col-12 fila">
+								<h1 class="propiedades_title">Nom. escuela:</h1>
+						</div>
+						<div class="col-md-3 col-12 fila">
+								<input id="nomEscuela_f" class="input-res" name="textfield" type="text" placeholder="ETSINF">
+						</div>
+						<div class="col-md-3 col-12 fila">
+								<h1 class="propiedades_title">Nom. asignatura:</h1>
+						</div>
+						<div class="col-md-3 col-12 fila">
+								<input id="nomAsignatura_f" class="input-res" name="textfield" type="text" placeholder="FOE">
+						</div>
+					</div>
+					<hr>
+					<br>
+					<h1 style="margin-top:5vh;">Actos de evaluación: </h1>
+					<hr>
+					<div class="row container-fluid" style="display:flex;">
+						<div class="col-md-2 col-12 fila">
+							<h1 class="propiedades_title">Tipo de acto:</h1>
+						</div>
+						<div class="col-md-2 col-12 fila">
+							<input id="tipoActo_f" class="input-res" name="textfield" type="text" placeholder="Examen">
+						</div>
+						<div class="col-md-2 col-12 fila">
+							<h1 class="propiedades_title">Nota mínima:</h1>
+						</div>
+						<div class="col-md-1 col-12 fila">
+							<input id="notaMin_f" class="input-res" name="textfield" type="text" placeholder="4">
+						</div>
+						<div class="col-md-2 col-12 fila">
+							<h1 class="propiedades_title">% de la final:</h1>
+						</div>
+						<div class="col-md-1 col-12 fila">
+							<input id="porcentaje_f" class="input-res" name="textfield" type="text" placeholder="40">
+						</div>
+						<div class="col-md-2 col-12 fila">
+							<button type="button" class="button_add_acto" onclick="addActo()">Añadir</button>
+						</div>
+					</div>
+					<div class="row container-fluid" style="display:flex;">
+						<div class="col-md-6 col-0 fila"></div>
+						<div class="col-md-3 col-12 fila">
+							<h1 class="propiedades_title">Porcentaje total: </h1>
+						</div>
+						<div class="col-md-3 col-0 fila"></div>
+					</div>
+					<hr>
+					<div id="actos_list">
+						
+					</div>
+					<br>
+					<button type="button" class="next" onclick="nextForm(1)"> Siguiente</button>
+				</div>
+			</div>
+				<!--FORM 1-->
+			<div class="col-md-10 col-12 programa" id="creaAsignatura1">
+				<div class="asignaturas_title">
+					<h1 style="margin-top:5vh;">Crear asignatura</h1>
+					<hr>						
+					<div class="row container-fluid" style="display:flex;">
+						<div class="col-md-3 col-12 fila">
+								<h1 class="propiedades_title">Nom. escuela:</h1>
+						</div>
+						<div class="col-md-3 col-12 fila">
+								<input id="nomEscuela_f" class="input-res" name="textfield" type="text" placeholder="ETSINF">
+						</div>
+						<div class="col-md-3 col-12 fila">
+								<h1 class="propiedades_title">Nom. asignatura:</h1>
+						</div>
+						<div class="col-md-3 col-12 fila">
+								<input id="nomAsignatura_f" class="input-res" name="textfield" type="text" placeholder="FOE">
+						</div>
+					</div>
+					<hr>
+					<br>
+					<h1 style="margin-top:5vh;">Actos de evaluación: </h1>
+					<hr>
+					<div class="row container-fluid" style="display:flex;">
+						<div class="col-md-2 col-12 fila">
+							<h1 class="propiedades_title">Tipo de acto:</h1>
+						</div>
+						<div class="col-md-2 col-12 fila">
+							<input id="tipoActo_f" class="input-res" name="textfield" type="text" placeholder="Examen">
+						</div>
+						<div class="col-md-2 col-12 fila">
+							<h1 class="propiedades_title">Nota mínima:</h1>
+						</div>
+						<div class="col-md-1 col-12 fila">
+							<input id="notaMin_f" class="input-res" name="textfield" type="text" placeholder="4">
+						</div>
+						<div class="col-md-2 col-12 fila">
+							<h1 class="propiedades_title">% de la final:</h1>
+						</div>
+						<div class="col-md-1 col-12 fila">
+							<input id="porcentaje_f" class="input-res" name="textfield" type="text" placeholder="40">
+						</div>
+						<div class="col-md-2 col-12 fila">
+							<button type="button" class="button_add_acto">Añadir</button>
+						</div>
+					</div>
+					<hr>
+					<br>
+					<button type="button" class="next" onclick="nextForm(0)"> Anterior</button>
+					<button type="button" class="next" onclick="nextForm(1)"> Siguiente</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--HOME END-->
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+	<!--animation-->
+	<script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+	  <script>
+	    AOS.init();
+	  </script>
+	<script type="text/javascript" charset="uft-8">
+		activado = true
+	    const navSlide = () => {
+			const burger= document.querySelector('.burger');
+			//Toggle nav
+			burger.addEventListener('click', () => {
+				console.log("hi  " + activado);
+				//nav.classList.toggle('nav_active');//burger-menu
+				//nav.classList.toggle('burger-menu');
+				//Animate links
+				if(activado){
+					$('#menu').addClass('burger-menu');
+					activado = false;
+				}else {
+					$('#menu').removeClass('burger-menu');
+					activado = true;
+				}
+				//Burger animation
+				burger.classList.toggle('toggle');
+			});
+		}
+		navSlide();
+	</script>
+
+	<script>
+		function selectDIV(e) {
+			if(e == 1){
+				$('#asignaturas').css("display","none");
+				$('#creaAsignatura').css("display","none");
+				$('#main').css("display","block");
+			}else if(e == 2){
+				$('#main').css("display","none");
+				$('#creaAsignatura').css("display","none");
+				$('#asignaturas').css("display","block");
+			}else if(e == 3){
+				$('#main').css("display","none");
+				$('#asignaturas').css("display","none");
+				$('#creaAsignatura').css("display","block");
+			}
+		}
+	</script>
+	<script>
+		form = 0
+		function nextForm(e) {
+			if(form == 0 && e == 1){
+				$('#creaAsignatura').css("display","none");
+				$('#creaAsignatura1').css("display","none");
+				$('#creaAsignatura1').css("display","block");
+				form ++;
+			}else if(form == 1 && e == 0){
+				$('#creaAsignatura').css("display","none");
+				$('#creaAsignatura1').css("display","none");
+				$('#creaAsignatura').css("display","block");
+				form --;
+			}
+		}
+	</script>
+	<script>
+		function sumaPercent() {
+
+		}
+	</script>
+	<script>
+		function deletear() {
+			document.getElementById("actos_list").removeChild(document.getElementById(this.parentNode.id))
+		}
+		contador = 0;
+		//ADD ACT LIST ELEMENT
+		function addActo() {
+			//var nomEscuela = document.getElementById("nomEscuela_f").value;
+			//var nomAsignatura = document.getElementById("nomAsignatura_f").value;
+			var tipoActo = document.getElementById("tipoActo_f").value;
+			var notaMin = document.getElementById("notaMin_f").value;
+			var porcentaje = document.getElementById("porcentaje_f").value;
+			if(tipoActo != "" &&
+				notaMin != "" && porcentaje!= ""){
+				var fila = document.createElement("DIV");
+				fila.setAttribute("style", "height: 100%;border-color:black;");
+				fila.setAttribute("style", "background-color:white;");
+				var info = document.createTextNode(contador + " -Acto [ "+ tipoActo +" ] nota mínima [ "+
+					notaMin + " ] porcentaje [ " + porcentaje + "% ].");
+				contador++
+				var borrar = document.createElement("BUTTON");
+				borrar.innerHTML = "X";
+				borrar.setAttribute("style","position:absolute; height:40px;text-color: black; width: 40px; border-radius: 80px;margin:0;margin-top: 14px; background-color:white;border-color: black;padding-top: -20px!important;font-size: 15px;border-color:#c00;");
+				borrar.onclick = function() {
+					document.getElementById("actos_list").removeChild(this.parentNode)
+				}
+				fila.appendChild(info);
+				fila.appendChild(borrar)
+				document.getElementById("actos_list").appendChild(fila);
+			}else{
+				console.log("rellena todo")
+			}
+
+		}
+	</script>
+</body>
+</html>
