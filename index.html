@@ -53,7 +53,7 @@
 	<div id="home" class="container-fluid" style="z-index: 2;">
 		<div class="row">
 			
-			<div class="burger" style="position: fixed; z-index: 9999;">
+			<div class="burger col-md-0 col-0" style="position: fixed; z-index: 9999;">
 				<div class="lin1"></div>
 				<div class="lin2"></div>
 				<div class="lin3"></div>
@@ -63,7 +63,7 @@
 					<img src="./img/LogoUPV.png" alt="Logo" class="logo">
 				</div>
 				<div>
-					<img src="./img/polinotas.png" alt="Logo" class="logo">
+					<img src="./img/poliNotas.png" alt="Logo" class="logo">
 				</div>
 				<div class="menu_prop">
 					<ul	class="lin">
@@ -78,12 +78,33 @@
 				</div>
 			</div>
 
-			<div class="col-md-10 col-12 programa" id="main">
+			<div class="col-md-10 col-12 container-fluid programa" id="main">
 				<iframe id="iframe"
 				    width="100%"
 				    height="100vh"
 				    src="http://www.upv.es/">
 				</iframe> 
+				<div id="mainMobile">
+					<div>
+						<img src="./img/LogoUPV.png" alt="Logo" class="logo-m">
+					</div>
+					<div>
+						<img src="./img/poliNotas.png" alt="Logo" class="logo-m">
+					</div>
+					<div class="menu_prop">
+						<ul	class="lin">
+							<li id="button_asignatura" class="button_menu" onclick="selectDIV(2)">Asignaturas</li>
+						</ul>
+						<ul	class="lin">
+							<li id="button_add_asignatura" class="button_menu" onclick="selectDIV(3)">Crear asignatura</li>
+						</ul>
+					</div>
+					<div>
+						<h5 style="color:blue; font-size: 15px;margin-top:30px;">
+							< Version Pre-Alpha, keep calm y no suspendas!! >
+						</h5>
+					</div>
+				</div>
 			</div>
 
 			<div class="col-md-10 col-12 programa asignaturas_list_div" id="asignaturas">
