@@ -131,13 +131,13 @@
 					<hr>						
 					<div class="row container-fluid" style="display:flex;">
 						<div class="col-md-3 col-12 fila">
-								<h1 class="propiedades_title">Nom. escuela:</h1>
+								<h1 class="propiedades_enu">Nom. escuela:</h1>
 						</div>
 						<div class="col-md-3 col-12 fila">
 								<input id="nomEscuela_f" class="input-res" name="textfield" type="text" placeholder="ETSINF">
 						</div>
 						<div class="col-md-3 col-12 fila">
-								<h1 class="propiedades_title">Nom. asignatura:</h1>
+								<h1 class="propiedades_enu">Nom. asignatura:</h1>
 						</div>
 						<div class="col-md-3 col-12 fila">
 								<input id="nomAsignatura_f" class="input-res" name="textfield" type="text" placeholder="FOE">
@@ -149,19 +149,19 @@
 					<hr>
 					<div class="row container-fluid" style="display:flex;">
 						<div class="col-md-2 col-12 fila">
-							<h1 class="propiedades_title">Tipo de acto:</h1>
+							<h1 class="propiedades_enu">Tipo de acto:</h1>
 						</div>
 						<div class="col-md-2 col-12 fila">
 							<input id="tipoActo_f" class="input-res" name="textfield" type="text" placeholder="Examen">
 						</div>
 						<div class="col-md-2 col-12 fila">
-							<h1 class="propiedades_title">Nota mínima:</h1>
+							<h1 class="propiedades_enu">Nota mínima:</h1>
 						</div>
 						<div class="col-md-1 col-12 fila">
 							<input id="notaMin_f" class="input-res" name="textfield" type="text" placeholder="4">
 						</div>
 						<div class="col-md-2 col-12 fila">
-							<h1 class="propiedades_title">% de la final:</h1>
+							<h1 class="propiedades_enu">% de la final:</h1>
 						</div>
 						<div class="col-md-1 col-12 fila">
 							<input id="porcentaje_f" class="input-res" name="textfield" type="text" placeholder="40">
@@ -171,13 +171,20 @@
 						</div>
 					</div>
 					<div class="row container-fluid" style="display:flex;">
-						<div class="col-md-6 col-0 fila"></div>
+						<div class="col-md-6 col-0 fila">
+						</div>
 						<div class="col-md-3 col-12 fila">
-							<h1 class="propiedades_title">Porcentaje total: </h1>
+							<h1 class="propiedades_enu">Porcentaje total: </h1>
 						</div>
 						<div class="col-md-3 col-0 fila"></div>
 					</div>
 					<hr>
+					<div class="row">
+						<div class="col-md-10"></div>
+						<div class="col-md-2">
+							<h1 class="propiedades_title" id="errorAsig">Revisa los porcentajes</h1>
+						</div>
+					</div>
 					<div id="actos_list">
 						
 					</div>
@@ -248,6 +255,10 @@
 	  <script>
 	    AOS.init();
 	  </script>
+	<script>
+		/**VARIABLES**/
+		listaAsignaturas = [];
+	</script>
 	<script type="text/javascript" charset="uft-8">
 		activado = true
 	    const navSlide = () => {
@@ -306,14 +317,13 @@
 		}
 	</script>
 	<script>
-		function sumaPercent() {
-
-		}
+		function a(){}
 	</script>
 	<script>
 		function deletear() {
 			document.getElementById("actos_list").removeChild(document.getElementById(this.parentNode.id))
 		}
+		sumaPercent = 0
 		contador = 0;
 		//ADD ACT LIST ELEMENT
 		function addActo() {
@@ -322,6 +332,11 @@
 			var tipoActo = document.getElementById("tipoActo_f").value;
 			var notaMin = document.getElementById("notaMin_f").value;
 			var porcentaje = document.getElementById("porcentaje_f").value;
+			if(sumaPercent + porcentaje <= 100){
+				$('#errorAsig').css("display","none");
+			}else {
+				$('#errorAsig').css("display","block");
+			}
 			if(tipoActo != "" &&
 				notaMin != "" && porcentaje!= ""){
 				var fila = document.createElement("DIV");
@@ -332,17 +347,39 @@
 				contador++
 				var borrar = document.createElement("BUTTON");
 				borrar.innerHTML = "X";
-				borrar.setAttribute("style","position:absolute; height:40px;text-color: black; width: 40px; border-radius: 80px;margin:0;margin-top: 14px; background-color:white;border-color: black;padding-top: -20px!important;font-size: 15px;border-color:#c00;");
+				borrar.setAttribute("style","position:absolute; height:30px;text-color: black; width: 40px; border-radius: 80px;margin:0;margin-top: 14px; background-color:white;border-color: black;padding-top: -20px!important;font-size: 15px;border-color:#c00;");
 				borrar.onclick = function() {
 					document.getElementById("actos_list").removeChild(this.parentNode)
 				}
 				fila.appendChild(info);
 				fila.appendChild(borrar)
 				document.getElementById("actos_list").appendChild(fila);
+				
+
+
+//etra
+				listaAsignaturas.push(new Asignatura("Escuela",""))
+				console.log(listaAsignaturas)
 			}else{
 				console.log("rellena todo")
 			}
 
+		}
+	</script>
+	<script>
+
+		class Asignatura{
+			constructor(nomEscuela, nomAsig, tipoActo, notaMin, porcentaje){
+				this.nomEscuela = nomEscuela;
+				this.nomAsig = nomAsig;
+				this.tipoActo = tipoActo;
+				this.notaMin = notaMin;
+				this.porcentaje = porcentaje;
+			}
+
+			toString(){
+				return this.nomEscuela;
+			}
 		}
 	</script>
 </body>

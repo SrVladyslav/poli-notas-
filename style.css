@@ -38,6 +38,17 @@ nav {
   background-color: black;
 }
 
+#errorAsig {
+  display: none;
+  font-style: italic;
+  font-size: 25px;
+  color: #c12a26!important;
+}
+
+.propiedades_enu {
+  font-size: 25px;
+}
+
 .sticky {
   position: fixed;
   top: 0;
