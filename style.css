@@ -49,6 +49,33 @@ nav {
   font-size: 25px;
 }
 
+.lista_asignaturas_style {
+  height: auto;
+  width: 100%!important;
+  min-height: 70px;
+}
+
+.lista_asignaturas_style:hover {
+  border-color: #c12a26!important;
+  background-color: gray;
+}
+
+.button_select{
+  height: 40px;
+  width: 100px;
+  border-radius: 10px;
+  border-color: black;
+  background-color: white;
+  vertical-align: middle;
+  font-size: 25px;
+  line-height: 13px;
+  text-align: center;
+}
+
+.button_select:hover {
+  border-color: green;
+}
+
 .sticky {
   position: fixed;
   top: 0;
@@ -79,14 +106,15 @@ nav {
 
 #main {
   margin: 0!important;
-  height: 100vh;
-  background-color: black;
+  height: 100%;
+  background-color: white;
   width: 100%!important;
 }
 
 #mainMobile{
   display: none;
   height: auto;
+  min-height: 100vh;
   max-height: 1300px;
   width: auto;
   max-width: 1300px; 
@@ -96,6 +124,7 @@ nav {
 
 #iframe {
   display: block;
+  background-color: white;
 }
 
 
@@ -105,6 +134,11 @@ nav {
   }
 }
 @media screen and (max-width: 768px){
+
+  .button_add_acto {
+    display: block;
+    margin: 20px auto;
+  }
 
   .burger {
     display: block!important;
@@ -126,6 +160,7 @@ nav {
   #main {
     margin: 0;
     height: auto;
+    max-height: 1300px;
     width: auto;
     background-color: black;
   }
@@ -415,12 +450,10 @@ img {
   border-color: white;
 }
 /**asignaturas**/
-#asignaturas_list_div {
-  border:1px solid #000;
-  font-family:arial;
-  height:80vh;
-  width:100%;
-  margin: 0;
+.aasignaturas_list_div {
+  overflow-y:  auto;
+  height: 100%;
+  min-height: 100vh;
 }
 
 .asignaturas_title {
@@ -432,29 +465,38 @@ img {
 
 #asignaturas_list {
   list-style:none;
-  max-height:80vh;
   width:100%;
+  height: 75vh;
   margin:0;
-  overflow:auto;
+  overflow-y:auto!important;
+  overflow-x:hidden;
   padding:0;
   text-indent:10px;
 }
 
 #asignaturas_list li {
-  line-height: 80px;
+  line-height: 70px;
 }
 
 #asignaturas_list li:hover{
   border-color: red;
   border-width: 1px;
+  background-color: gray;
 }
 
 #asignaturas_list li:nth-child(even) {
   background:  #ccc;
 }
 
+#asignaturas_list li:nth-child(even):hover {
+  background-color:  gray;
+}
+
 #asignaturas {
   display: none;
+  overflow-y:  auto;
+  height: 100%;
+  min-height: 100vh!important;
 }
 
 #creaAsignatura, #creaAsignatura1{
@@ -495,6 +537,14 @@ img {
 .propiedades_title {
   font-size: 30px;
   margin: 5px;
+}
+
+.actos_list {
+  background-color: white;
+}
+
+.actos_list:nth-child(even) {
+  background-color: #ccc;
 }
 
 .button_add_acto {
