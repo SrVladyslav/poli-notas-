@@ -60,6 +60,13 @@ nav {
   background-color: gray;
 }
 
+.c {
+  display: block;
+  margin: 0 auto;
+  margin-top: 15px;
+  vertical-align: middle;
+}
+
 .button_select{
   height: 40px;
   width: 100px;
