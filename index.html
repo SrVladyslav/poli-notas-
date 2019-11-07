@@ -46,13 +46,12 @@
 	<!--////////////JS END/////////////-->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
-<body>
+<body id="poliNotas">
 
 	
 	<!--HOME-->
 	<div id="home" class="container-fluid" style="z-index: 2;">
 		<div class="row">
-			
 			<div class="burger col-md-0 col-0" style="position: fixed; z-index: 9999;">
 				<div class="lin1"></div>
 				<div class="lin2"></div>
@@ -115,19 +114,6 @@
 				<ul id="asignaturas_list">
 					<li>Asignatura 1</li>
 					<li>Asignatura 2</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
 					<li>s</li>
 					<li>s</li>
 					<li>s</li>
@@ -201,8 +187,8 @@
 					</div>
 					<hr>
 					<div class="row">
-						<div class="col-md-10"></div>
-						<div class="col-md-2">
+						<div class="col-md-8"></div>
+						<div class="col-md-4">
 							<h1 class="propiedades_title" id="errorAsig">Revisa los porcentajes</h1>
 						</div>
 					</div>
@@ -210,59 +196,7 @@
 						
 					</div>
 					<br>
-					<button type="button" class="next" onclick="nextForm(1)"> Siguiente</button>
-				</div>
-			</div>
-				<!--FORM 1-->
-			<div class="col-md-10 col-12 programa" id="creaAsignatura1">
-				<div class="asignaturas_title">
-					<h1 style="margin-top:5vh;">Crear asignatura</h1>
-					<hr>						
-					<div class="row container-fluid" style="display:flex;">
-						<div class="col-md-3 col-12 fila">
-								<h1 class="propiedades_title">Nom. escuela:</h1>
-						</div>
-						<div class="col-md-3 col-12 fila">
-								<input id="nomEscuela_f" class="input-res" name="textfield" type="text" placeholder="ETSINF">
-						</div>
-						<div class="col-md-3 col-12 fila">
-								<h1 class="propiedades_title">Nom. asignatura:</h1>
-						</div>
-						<div class="col-md-3 col-12 fila">
-								<input id="nomAsignatura_f" class="input-res" name="textfield" type="text" placeholder="FOE">
-						</div>
-					</div>
-					<hr>
-					<br>
-					<h1 style="margin-top:5vh;">Actos de evaluación: </h1>
-					<hr>
-					<div class="row container-fluid" style="display:flex;">
-						<div class="col-md-2 col-12 fila">
-							<h1 class="propiedades_title">Tipo de acto:</h1>
-						</div>
-						<div class="col-md-2 col-12 fila">
-							<input id="tipoActo_f" class="input-res" name="textfield" type="text" placeholder="Examen">
-						</div>
-						<div class="col-md-2 col-12 fila">
-							<h1 class="propiedades_title">Nota mínima:</h1>
-						</div>
-						<div class="col-md-1 col-12 fila">
-							<input id="notaMin_f" class="input-res" name="textfield" type="text" placeholder="4">
-						</div>
-						<div class="col-md-2 col-12 fila">
-							<h1 class="propiedades_title">% de la final:</h1>
-						</div>
-						<div class="col-md-1 col-12 fila">
-							<input id="porcentaje_f" class="input-res" name="textfield" type="text" placeholder="40">
-						</div>
-						<div class="col-md-2 col-12 fila">
-							<button type="button" class="button_add_acto">Añadir</button>
-						</div>
-					</div>
-					<hr>
-					<br>
-					<button type="button" class="next" onclick="nextForm(0)"> Anterior</button>
-					<button type="button" class="next" onclick="nextForm(1)"> Siguiente</button>
+					<button type="button" class="next button_add_acto" onclick="creaAsignatura()"> Crear</button>
 				</div>
 			</div>
 		</div>
@@ -278,7 +212,7 @@
 	  </script>
 	<script>
 		/**VARIABLES**/
-		listaAsignaturas = [];
+		listaAsignaturas = []; //contiene los objetos Asignatura
 	</script>
 	<script type="text/javascript" charset="uft-8">
 		activado = true
@@ -322,6 +256,36 @@
 		}
 	</script>
 	<script>
+		/**CreaAsignatura**/
+		function creaAsignatura(){
+			var nomEscuela = document.getElementById("nomEscuela_f").value;
+			var nomAsignatura = document.getElementById("nomAsignatura_f").value;
+
+			listaAsignaturas.push(new Asignatura(nomEscuela,nomAsignatura,asignaturasActuales))
+			console.log("ASIG:" + asignaturasActuales)
+			setTimeout(()=>{
+				asignaturasActuales = [];//reseteo la lista para usarla de nuevo
+				console.log("ASIG pos:" + asignaturasActuales)
+			},1);
+			console.log(listaAsignaturas)
+			mostrarListaAsignaturas()
+		}
+	</script>
+	<script>
+		function mostrarListaAsignaturas(){
+			
+			for(i = 0; i< document.getElementById("asignaturas_list").length; i++){
+				document.getElementById("asignaturas_list").pop(i)
+			}
+
+			listaAsignaturas.forEach(function(elemento){
+				var li = document.createElement("LI");
+				li.appendChild(document.createTextNode(elemento.toString()));
+				document.getElementById("asignaturas_list").appendChild(li);
+			});
+		}
+	</script>
+	<script>
 		form = 0
 		function nextForm(e) {
 			if(form == 0 && e == 1){
@@ -338,14 +302,12 @@
 		}
 	</script>
 	<script>
-		function a(){}
-	</script>
-	<script>
 		function deletear() {
 			document.getElementById("actos_list").removeChild(document.getElementById(this.parentNode.id))
 		}
 		sumaPercent = 0
 		contador = 0;
+		asignaturasActuales = [] //contiene las asignaturas actuales
 		//ADD ACT LIST ELEMENT
 		function addActo() {
 			//var nomEscuela = document.getElementById("nomEscuela_f").value;
@@ -375,12 +337,9 @@
 				fila.appendChild(info);
 				fila.appendChild(borrar)
 				document.getElementById("actos_list").appendChild(fila);
-				
+				//sumo asignatura a la lista de asignaturas
+				asignaturasActuales.push(new Acto(tipoActo, notaMin, porcentaje));
 
-
-//etra
-				listaAsignaturas.push(new Asignatura("Escuela",""))
-				console.log(listaAsignaturas)
 			}else{
 				console.log("rellena todo")
 			}
@@ -388,18 +347,28 @@
 		}
 	</script>
 	<script>
-
-		class Asignatura{
-			constructor(nomEscuela, nomAsig, tipoActo, notaMin, porcentaje){
-				this.nomEscuela = nomEscuela;
-				this.nomAsig = nomAsig;
+		class Acto {
+			constructor(tipoActo, notaMin, porcentaje) {
 				this.tipoActo = tipoActo;
 				this.notaMin = notaMin;
 				this.porcentaje = porcentaje;
 			}
 
+			toString() {
+				return ("Acto [ "+ this.tipoActo +" ] nota mínima [ "+
+					this.notaMin + " ] porcentaje [ " + this.porcentaje + "% ].")
+			}
+		}
+
+		class Asignatura{
+			constructor(nomEscuela, nomAsig, actos){
+				this.nomEscuela = nomEscuela;
+				this.nomAsig = nomAsig;
+				this.actos = actos;
+			}
+
 			toString(){
-				return this.nomEscuela;
+				return (">Escuela: [" + this.nomEscuela + "] Asignatura: [ "+this.nomAsig + "].");
 			}
 		}
 	</script>

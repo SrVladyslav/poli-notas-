@@ -1,5 +1,5 @@
 html{
-	height: 100%;
+  height: 100%;
     /*background-image: url(img/logo/logo-big.png);*/
     /**font-family: 'Roboto', sans-serif;*/
   background-color: white;
@@ -86,8 +86,10 @@ nav {
 
 #mainMobile{
   display: none;
-  height: 100vh;
-  width: 100vw;
+  height: auto;
+  max-height: 1300px;
+  width: auto;
+  max-width: 1300px; 
   background-color: black;
   margin: 0;
 }
@@ -121,6 +123,13 @@ nav {
     margin: 0;
   }
 
+  #main {
+    margin: 0;
+    height: auto;
+    width: auto;
+    background-color: black;
+  }
+
   #iframe {
     display: none;
   }
@@ -140,6 +149,7 @@ nav {
   .menu_prop {
     overflow:auto!important;
     width: 100%;
+    height: auto;
   }
 
   .lin {
@@ -332,6 +342,7 @@ img {
 #menu {
   height: 100vh;
   background-color: black;
+  overflow-y: auto;
 }
 
 .logo {
@@ -367,7 +378,7 @@ img {
 .lin {
   width: 80%;
   margin-left: 20%;
-  margin-top: 20%;
+  margin-top: 10px;
   text-decoration: none;
 }
 
