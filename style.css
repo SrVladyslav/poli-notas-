@@ -89,6 +89,7 @@ nav {
   border-color: green;
 }
 
+
 .sticky {
   position: fixed;
   top: 0;
@@ -158,6 +159,14 @@ nav {
     cursor: pointer;
   }
 
+  .burger div{
+    width: 17px;
+    height: 4px;
+    background-color: black!important;
+    margin: 2.5px;
+    transition: all 0.3s ease;
+  }
+
   .ico {
   height: 25px;
   width: 25px;
@@ -187,6 +196,9 @@ nav {
     display: none;
   }
 
+  #calcularAsignatura {
+    display: none;
+  }
   .burger-menu img {
     width: 8em;
     height: auto;

@@ -69,7 +69,7 @@
 						<li id="button_inicio" class="button_menu" onclick="selectDIV(1)">Inicio</li>
 					</ul>
 					<ul	class="lin">
-						<li id="button_asignatura" class="button_menu" onclick="selectDIV(2)">Asignaturas</li>
+						<li id="button_asignatura" class="button_menu" onclick="selectDIV(2); ">Asignaturas</li>
 					</ul>
 					<ul	class="lin">
 						<li id="button_add_asignatura" class="button_menu" onclick="selectDIV(3)">Crear asignatura</li>
@@ -92,7 +92,7 @@
 					</div>
 					<div class="menu_prop">
 						<ul	class="lin">
-							<li id="button_asignatura" class="button_menu" onclick="selectDIV(2)">Asignaturas</li>
+							<li id="button_asignatura" class="button_menu" onclick="selectDIV(2); ">Asignaturas</li>
 						</ul>
 						<ul	class="lin">
 							<li id="button_add_asignatura" class="button_menu" onclick="selectDIV(3)">Crear asignatura</li>
@@ -107,7 +107,7 @@
 			</div>
 	
 			<div class="col-md-10 col-12 programa asignaturas_list_div" id="asignaturas">
-		    	<h1 style="margin-top:5vh;text-align:center;">Asignaturas disponibles</h1>
+		    	<h1 style="margin-top:6vh;text-align:center;">Asignaturas disponibles</h1>
 		    	<hr>
 		    	<ul id="asignaturas_list">
 					<li>Asignatura 1</li>
@@ -119,7 +119,8 @@
 				</ul>
 				<hr style="margin-bottom: 0;">			    	
 			</div>
-
+			
+			<!--Crear asignatura-->
 			<div class="col-md-10 col-12 programa" id="creaAsignatura">
 				<div class="asignaturas_title">
 					<h1 style="margin-top:5vh;">Crear asignatura</h1>
@@ -188,6 +189,43 @@
 					<br><br><br>
 				</div>
 			</div>
+
+
+			<!--Calcular Asignatura-->
+			<div class="col-md-10 col-12 programa" id="calcularAsignatura">
+				<div class="asignaturas_title">
+					<h1 style="margin-top:5vh;">Calcular asignatura</h1>
+					<hr>						
+					<div class="row container-fluid" style="display:flex;">
+						<div class="col-md-6 col-12 fila">
+								<h1 class="propiedades_enu" id="cargaAsigEscuela">Nom. escuela ${}<h1>
+						</div>
+						<div class="col-md-6 col-12 fila">
+								<h1 class="propiedades_enu" id="cargaAsigNom">Nom. asignatura:</h1>
+						</div>
+					</div>
+					<hr>
+					<br>
+					<h1 style="margin-top:5vh;">Actos de evaluación: </h1>
+					<hr>
+					<div class="row container-fluid" style="display:flex;" id="calcu_asig_list">
+						<li>asignaturas</li>
+					</div>
+					<!--nota final-->
+					<div class="row container-fluid" style="display:flex;">
+						<div class="col-md-6 col-0 fila">
+						</div>
+						<div class="col-md-3 col-12 fila">
+							<h1 class="propiedades_enu">Porcentaje total: </h1>
+						</div>
+						<div class="col-md-3 col-0 fila"></div>
+					</div>
+					<hr>
+					<br>
+					<button type="button" class="next button_add_acto" onclick="calcularNota(this)"> Calcular</button>
+					<br><br><br>
+				</div>
+			</div>
 		</div>
 	</div>
 	<!--HOME END-->
@@ -231,17 +269,43 @@
 		function selectDIV(e) {
 			if(e == 1){
 				$('#asignaturas').css("display","none");
+				$('#calcularAsignatura').css("display","none");
 				$('#creaAsignatura').css("display","none");
 				$('#main').css("display","block");
 			}else if(e == 2){
 				$('#main').css("display","none");
+				$('#calcularAsignatura').css("display","none");
 				$('#creaAsignatura').css("display","none");
 				$('#asignaturas').css("display","block");
 			}else if(e == 3){
 				$('#main').css("display","none");
 				$('#asignaturas').css("display","none");
+				$('#calcularAsignatura').css("display","none");
 				$('#creaAsignatura').css("display","block");
+			}else if(e == 4){
+				$('#main').css("display","none");
+				$('#asignaturas').css("display","none");
+				$('#creaAsignatura').css("display","none");
+				$('#calcularAsignatura').css("display","block");
 			}
+		}
+	</script>
+	<script>
+		/**CALCULAR LA NOTA FINAL**/
+
+		function calcularNota(asignatura) {
+
+		}
+
+		/**Rellena el form con los datos de la asignatura**/
+		function calcularAsignaturaRelleno(boton){
+			selectDIV(4);
+			//1 encontrar laasignatura
+			console.log($("li").index(boton.parentNode.parentNode.parentNode)-5);
+			var asigACalcu = listaAsignaturas[$("li").index(boton.parentNode.parentNode.parentNode)-5];
+			//2 encontrar sus parametros, asi como la cantidad de actos
+			console.log(asigACalcu.getActos())
+			
 		}
 	</script>
 	<script>
@@ -253,17 +317,51 @@
 			listaAsignaturas.push(new Asignatura(nomEscuela,nomAsignatura,asignaturasActuales))
 			console.log("ASIG:" + asignaturasActuales)
 			setTimeout(()=>{
-				asignaturasActuales = [];//reseteo la lista para usarla de nuevo
+				asignaturasActuales = []//reseteo la lista para usarla de nuevo
+				//limpio los actos
+				actos_list.innerHTML = ""
 				console.log("ASIG pos:" + asignaturasActuales)
 			},1);
+			//saveJSON(listaAsignaturas);
+
+			//voy a la ventana de asignaturas al crear la asignatura
+			selectDIV(2)
 			console.log(listaAsignaturas)
 			mostrarListaAsignaturas()
 		}
+
+		//Guarda la lista de asignaturas en un JSON
+		function saveJSON(data){
+			//data type Asignatura
+			for(var i in listaAsignaturas){
+				//listaAsignaturas[i].
+			}
+			json = JSON.stringify(data);
+			localStorage.setItem("AsignaturasJSON", json);
+			console.log(localStorage)
+		}
+
+		function loadJSON(){
+			text = localStorage.getItem("AsignaturasJSON");
+			data = JSON.parse(text);
+			//reinicio la lista
+			//listaAsignaturas = []
+			var listaAsignaturas1 = []
+			for(var i in data)
+    			//listaAsignaturas1.push([(Asignatura)data [i]]);
+			//mostrarListaAsignaturas();
+			console.log("Cargando: "+listaAsignaturas1)
+		}
+
+		//loadJSON();
 	</script>
 	<script>
 		function deletear() {
-			document.getElementById(this.parentNode.id)
+			console.log(listaAsignaturas.indexOf(document.getElementById(this)))
 		}
+
+		//borra la lista de asignaturas para elegir y las rellena de nuevo desde el array que contiene los
+		//objetos Asignatura
 		function mostrarListaAsignaturas(){
 
 			document.getElementById("asignaturas_list").innerHTML = "";
@@ -276,7 +374,7 @@
 
 
 
-
+				//modelo la fila de la asignatura que aparecera en la lista
 				var asignatura =`<li class="lista_asignaturas_style">
 									<div class="row" style="display:flex; flex-direction:row;">
 										<div class="col-md-9" style="margin-top: 20px;">
@@ -298,9 +396,9 @@
 												</div>
 											</div>
 										</div>
-										<div class="col-md-2" style="vertical-align: middle;display:flex;flex-direction:row;">
-											<button type="button" class="button_select c" onclick="" >Cargar</button>
-											<button type="button" style="border-color: #c12a26;margin-left:5px;" class="c button_select" onclick="deleteAsig()" >Eliminar</button>
+										<div class="col-md-2" style="vertical-align: middle;display:flex;flex-direction:row;" id="5">
+											<button type="button" class="button_select c" onclick="calcularAsignaturaRelleno(this)" >Cargar</button>
+											<button type="button" style="border-color: #c12a26;margin-left:5px;" class="c button_select" onclick="deleteAsig(this)" >Eliminar</button>
 										</div>
 										<divc class="col-1">
 											
@@ -311,11 +409,16 @@
 			});
 		}
 
-		function deleteAsig(){
+		function deleteAsig(b){
 			var txt;
 		    if (confirm("Seguro que quieres eliminar la asignatura?")) {
 		      	//eliminar despues de la listageneral (TERMINAR)
-		      	document.getElementById("asignaturas_list").removeChild(document.getElementById(this.parentNode.id));
+		      	//console.log(document.getElementById("asignaturas_list").removeChild(document.getElementById(this.parentNode.id));
+				console.log($("li").index(b.parentNode.parentNode.parentNode)-5);
+				//console.log(document.getElementById("asignaturas_list").indexOf(document.getElementById(b.parentNode.parentNode.parentNode.id)))
+				//listaAsignaturas[$("li").index(b.parentNode.parentNode.parentNode)-5)].remove();
+				listaAsignaturas.splice($("li").index(b.parentNode.parentNode.parentNode)-5, 1 );
+		      	mostrarListaAsignaturas();
 		      	//document.getElementById("listaAsignaturas").
 		    } else {
 		      	alert("Menos mal!");
@@ -419,10 +522,15 @@
 				return this.nomAsig;
 			}
 
+			getActos() {
+				return this.actos;
+			}
+
 			getActosL(){
 				return this.actos.length;
 			}
 		}
+
 	</script>
 </body>
 </html>
