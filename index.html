@@ -192,39 +192,25 @@
 
 
 			<!--Calcular Asignatura-->
-			<div class="col-md-10 col-12 programa" id="calcularAsignatura">
-				<div class="asignaturas_title">
-					<h1 style="margin-top:5vh;">Calcular asignatura</h1>
-					<hr>						
-					<div class="row container-fluid" style="display:flex;">
-						<div class="col-md-6 col-12 fila">
-								<h1 class="propiedades_enu" id="cargaAsigEscuela">Nom. escuela ${}<h1>
-						</div>
-						<div class="col-md-6 col-12 fila">
-								<h1 class="propiedades_enu" id="cargaAsigNom">Nom. asignatura:</h1>
-						</div>
+			<div class="col-md-10 col-12 programa asignaturas_list_div" id="calcularAsignatura">
+		    	<h1 style="margin-top:6vh;text-align:center;">Calcular nota</h1>
+		    	<hr>
+		    	<div class="row container-fluid" style="display:flex;">
+					<div class="col-md-6 col-12 fila">
+							<h1 class="propiedades_enu" id="cargaAsigEscuela">Nom. escuela ${}<h1>
 					</div>
-					<hr>
-					<br>
-					<h1 style="margin-top:5vh;">Actos de evaluación: </h1>
-					<hr>
-					<div class="row container-fluid" style="display:flex;" id="calcu_asig_list">
-						<li>asignaturas</li>
+					<div class="col-md-6 col-12 fila">
+							<h1 class="propiedades_enu" id="cargaAsigNom">Nom. asignatura:</h1>
 					</div>
-					<!--nota final-->
-					<div class="row container-fluid" style="display:flex;">
-						<div class="col-md-6 col-0 fila">
-						</div>
-						<div class="col-md-3 col-12 fila">
-							<h1 class="propiedades_enu">Porcentaje total: </h1>
-						</div>
-						<div class="col-md-3 col-0 fila"></div>
-					</div>
-					<hr>
-					<br>
-					<button type="button" class="next button_add_acto" onclick="calcularNota(this)"> Calcular</button>
-					<br><br><br>
 				</div>
+		    	<hr>
+		    	<ul id="calcu_asig_list">
+					<li>Asignatura 1</li>
+				</ul>
+				<hr>
+				<br>
+				<button type="button" class="next button_add_acto" style="margin:auto!important; margin-top: 20px;margin-bottom: 20px;" onclick="calcularNota(this)"> Calcular</button>
+				<br><br><br>			    	
 			</div>
 		</div>
 	</div>
@@ -305,7 +291,40 @@
 			var asigACalcu = listaAsignaturas[$("li").index(boton.parentNode.parentNode.parentNode)-5];
 			//2 encontrar sus parametros, asi como la cantidad de actos
 			console.log(asigACalcu.getActos())
-			
+			var actos = asigACalcu.getActos()
+
+			//3 rellenar el html con los actos
+			document.getElementById("calcu_asig_list").innerHTML=""
+			actos.forEach((acto)=>{
+				var act =`<li class="lista_asignaturas_style_a">
+							<div class="row" style="text-align:center;margin-top:20px;display:flex; flex-direction:row;">
+								<div class="col-md-4 col-12">
+									<h1 style="margin-top:10px; text-align:center; font-size:20px;vertical-align: center;"> 
+									<img src="./img/icons/exam.png" style="margin-top:10px;" class="ico" alt="E">
+									<b style="margin-top:10px;">Acto:</b> ${acto.getTipo()}</h1>
+								</div>
+								<div class="col-md-4 col-12">
+									<h1 style="text-align:center; margin-top:10px;font-size:20px;vertical-align: center;"> 
+									<img src="./img/icons/percentage.png" style="margin-top:10px;" class="ico" alt="E">
+									<b style="margin-top:10px;">Porcentaje:</b> ${acto.getPorcentaje()}</h1>
+								</div>
+								<div class="col-md-2 col-12" style="display:flex; flex-direction:row; text-align:center;margin:0;">
+									<h1 style="text-align:center;margin-top:10px; font-size:20px;vertical-align: center;"> 
+									<img src="./img/icons/report.png" style="margin-top:10px; margin:auto;" class="ico" alt="E"><b>Acto: </b></h1>
+								</div
+								<div class="col-md-2 col-12" style="width:100%;">
+									<input class="input-res-m" name="textfield" type="text" placeholder="nota" onchange="rellenar(this, ${acto})">
+								</div>
+							</div>
+						</li>`
+				document.getElementById("calcu_asig_list").insertAdjacentHTML("beforeend", act);
+			})
+		}
+
+		/**Relleno la asignatura con las notas**/
+		function rellenar(nota, acto){
+			acto.setNota(document.getElementById(nota).value)
+			console.log(acto.getNota())
 		}
 	</script>
 	<script>
@@ -325,7 +344,7 @@
 			//saveJSON(listaAsignaturas);
 
 			//voy a la ventana de asignaturas al crear la asignatura
-			selectDIV(2)
+			//selectDIV(2) //descomentar al acabar los tests
 			console.log(listaAsignaturas)
 			mostrarListaAsignaturas()
 		}
@@ -391,7 +410,7 @@
 												</div>
 												<div class="col-md-4 col-12">
 													<h1 style="text-align:center; font-size:20px;vertical-align: center;"> 
-													<img src="./img/icons/book.png" class="ico" alt="E">
+													<img src="./img/icons/exam.png" class="ico" alt="E">
 													<b>NºActos:</b> ${elemento.getActosL()}</h1>
 												</div>
 											</div>
@@ -491,15 +510,36 @@
 	</script>
 	<script>
 		class Acto {
-			constructor(tipoActo, notaMin, porcentaje) {
+			constructor(tipoActo, notaMin, porcentaje, nota) {
 				this.tipoActo = tipoActo;
 				this.notaMin = notaMin;
 				this.porcentaje = porcentaje;
+				this.nota = nota;
 			}
 
 			toString() {
 				return ("Acto [ "+ this.tipoActo +" ] nota mínima [ "+
 					this.notaMin + " ] porcentaje [ " + this.porcentaje + "% ].")
+			}
+
+			getTipo() {
+				return this.tipoActo;
+			}
+
+			getNotaMin() {
+				return this.notaMin;
+			}
+
+			getPorcentaje() {
+				return this.porcentaje;
+			}
+
+			getNota() {
+				return this.nota;
+			}
+
+			setNota(nota) {
+				this.nota = nota;
 			}
 		}
 
