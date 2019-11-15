@@ -8,7 +8,7 @@
 	<meta http-equiv="X-UA-Compatible" content="ie=edge">
 	<meta content="poli[notas], tu calculadora de notas perfecta" name="description">
 	<!--Fav-->
-  <link href="img/logo/logo2_new_azul.png" rel="shortcut icon">
+    <link href="img/logo/logo2_new_azul.png" rel="shortcut icon">
 	<!--/////////PAGE DESIGN END///////////-->
 
 	<!--//////////////FONTS////////////////-->
@@ -47,8 +47,6 @@
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body id="poliNotas">
-
-	
 	<!--HOME-->
 	<div id="home" class="container-fluid" style="z-index: 2;">
 		<div class="row">
@@ -197,7 +195,9 @@
 		    	<hr>
 		    	<div class="row container-fluid" style="display:flex;">
 					<div class="col-md-6 col-12 fila">
-							<h1 class="propiedades_enu" id="cargaAsigEscuela">Nom. escuela ${}<h1>
+							<h1 class="propiedades_enu" id="cargaAsigEscuela">Nom. escuela: 
+								
+							<h1>
 					</div>
 					<div class="col-md-6 col-12 fila">
 							<h1 class="propiedades_enu" id="cargaAsigNom">Nom. asignatura:</h1>
@@ -226,6 +226,8 @@
 	<script>
 		/**VARIABLES**/
 		listaAsignaturas = []; //contiene los objetos Asignatura
+		idNota = 0 //id de los textFields
+		cantidadIdsNota =0 
 	</script>
 	<script type="text/javascript" charset="uft-8">
 		activado = true
@@ -286,9 +288,14 @@
 		/**Rellena el form con los datos de la asignatura**/
 		function calcularAsignaturaRelleno(boton){
 			selectDIV(4);
+			idNota = 0
+			cantidadIdsNota = 0
 			//1 encontrar laasignatura
 			console.log($("li").index(boton.parentNode.parentNode.parentNode)-5);
+			//obtengo la asignatura a calcular
 			var asigACalcu = listaAsignaturas[$("li").index(boton.parentNode.parentNode.parentNode)-5];
+			document.getElementById('cargaAsigEscuela').innerHTML = 'Nom. escuela: '+ asigACalcu.getEscuela();
+			document.getElementById('cargaAsigNom').innerHTML = 'Nom. asignatura: '+ asigACalcu.getAsig(); 
 			//2 encontrar sus parametros, asi como la cantidad de actos
 			console.log(asigACalcu.getActos())
 			var actos = asigACalcu.getActos()
@@ -313,26 +320,46 @@
 									<img src="./img/icons/report.png" style="margin-top:10px; margin:auto;" class="ico" alt="E"><b>Acto: </b></h1>
 								</div
 								<div class="col-md-2 col-12" style="width:100%;">
-									<input class="input-res-m" name="textfield" type="text" placeholder="nota" onchange="rellenar(this, ${acto})">
+									<input class="input-res-m" name="textfield" id="${'nota'+idNota}" type="text" placeholder="nota" onchange="checkNumber(this)">
 								</div>
 							</div>
 						</li>`
+				idNota ++
 				document.getElementById("calcu_asig_list").insertAdjacentHTML("beforeend", act);
 			})
+		}
+
+		function checkNumber(a){
+			$(a).focusout(function() {
+			    if ($(a).val().length > 2 || isNaN(Number($(a).val()))) {
+			        $(a).css("border","1px solid red!important");
+			    }else{
+			    	$(a).css("border","");
+			    }
+			});
 		}
 
 		/**Relleno la asignatura con las notas**/
 		function rellenar(nota, acto){
 			acto.setNota(document.getElementById(nota).value)
 			console.log(acto.getNota())
+			//rellenar(this, ${acto})
 		}
+
+		function calcularNota(){
+			var id = 0
+			for(id = 0; id < idNota; id++){
+				console.log(document.getElementById('nota'+id).value)
+			}
+			console.log("FIN")
+		}		
 	</script>
 	<script>
 		/**CreaAsignatura**/
 		function creaAsignatura(){
 			var nomEscuela = document.getElementById("nomEscuela_f").value;
 			var nomAsignatura = document.getElementById("nomAsignatura_f").value;
-
+			contador = 1 //reseteo el contador de
 			listaAsignaturas.push(new Asignatura(nomEscuela,nomAsignatura,asignaturasActuales))
 			console.log("ASIG:" + asignaturasActuales)
 			setTimeout(()=>{
@@ -468,7 +495,7 @@
 			document.getElementById("actos_list").removeChild(document.getElementById(this.parentNode.id))
 		}
 		sumaPercent = 0
-		contador = 0;
+		contador = 1;
 		asignaturasActuales = [] //contiene las asignaturas actuales
 		//ADD ACT LIST ELEMENT
 		function addActo() {
@@ -501,7 +528,6 @@
 				document.getElementById("actos_list").appendChild(fila);
 				//sumo asignatura a la lista de asignaturas
 				asignaturasActuales.push(new Acto(tipoActo, notaMin, porcentaje));
-
 			}else{
 				console.log("rellena todo")
 			}
