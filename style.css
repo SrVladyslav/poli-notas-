@@ -86,6 +86,12 @@ nav {
   margin-top: -15px;
 }
 
+#piechart {
+  width: 400px!important;
+  height: 300px!important;
+  position: relative!important; 
+}
+
 .button_select{
   height: 40px;
   width: 100px;
@@ -136,6 +142,12 @@ nav {
   height: 100%;
   background-color: white;
   width: 100%!important;
+  /*display: none; BLOCK MAIN*/
+}
+
+#chart_div {
+  width: 50%!important;
+  height: 50%!important;
 }
 
 #mainMobile{
@@ -170,6 +182,17 @@ nav {
   max-height: 45vh!important;
   margin:0;
 }
+
+.calcu_asig {
+  list-style:none;
+  overflow-y:auto!important;
+  overflow-x:hidden;
+  width:100%;
+  height: 100%!important;
+  max-height: 40vh!important;
+  margin:0;
+}
+
 #calcu_asig_list li{
   background-color: white;
   margin:  0;
@@ -230,6 +253,7 @@ nav {
   #menu {
     display: none;
     position: fixed!important;
+    min-height: 100vh;
     height: 100%;
   }
 
@@ -249,6 +273,10 @@ nav {
 
   #iframe {
     display: none;
+  }
+
+  #statsAsignatura {
+    display: block;/*none;*/
   }
 
   .burger-menu img {
@@ -855,6 +883,14 @@ hr{
     }
 }
 
+@media only screen and (max-width: 1260px) {
+
+    #piechart {
+      width: 300px!important;
+      height: 200px!important;
+    }
+}
+
 @media only screen and (max-width: 600px) {
     .sponsors_img {
       position:relative !important;
@@ -1034,6 +1070,13 @@ hr{
       border-radius: 20px;
     }
 
+}
+
+@media only screen and (max-width: 260px) {
+    #piechart {
+      width: 200px!important;
+      height: 100px!important;
+    }
 }
 
 

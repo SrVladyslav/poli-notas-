@@ -31,6 +31,8 @@
 	<script src="js/jquery.flexslider.js"></script>
 	<!--Calendar styles end-->
 	<script type="text/javascript" src="js/window-scroll.js"></script>
+	<!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 	<script type="text/javascript">
 		/*function myFunction() {
@@ -90,7 +92,7 @@
 					</div>
 					<div class="menu_prop">
 						<ul	class="lin">
-							<li id="button_asignatura" class="button_menu" onclick="selectDIV(2); ">Asignaturas</li>
+							<li id="button_asignatura" class="button_menu" onclick="selectDIV(2);mostrarListaAsignaturas()">Asignaturas</li>
 						</ul>
 						<ul	class="lin">
 							<li id="button_add_asignatura" class="button_menu" onclick="selectDIV(3)">Crear asignatura</li>
@@ -110,10 +112,6 @@
 		    	<ul id="asignaturas_list">
 					<li>Asignatura 1</li>
 					<li>Asignatura 2</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
-					<li>s</li>
 				</ul>
 				<hr style="margin-bottom: 0;">			    	
 			</div>
@@ -187,6 +185,17 @@
 					<br><br><br>
 				</div>
 			</div>
+			<script>
+				function checkPercent(a){
+			        $(a).focusout(function() {
+			            if ($(a).val().length > 2 || isNaN(Number($(a).val()))) {
+			                $(a).css("border","1px solid red!important");
+			            }else{
+			    	        $(a).css("border","");
+			            }
+			        });
+		        }
+			</script>
 
 
 			<!--Calcular Asignatura-->
@@ -209,7 +218,43 @@
 				</ul>
 				<hr>
 				<br>
-				<button type="button" class="next button_add_acto" style="margin:auto!important; margin-top: 20px;margin-bottom: 20px;" onclick="calcularNota(this)"> Calcular</button>
+				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 20px;margin-bottom: 20px;" onclick="calcularNota(this); selectDIV(5); draw()"> Calcular</button></center>
+				<br><br><br>			    	
+			</div>
+
+			<!--Stats Asignatura-->
+			<div class="col-md-10 col-12 programa asignaturas_list_div" id="statsAsignatura" style="height: 100vh!important;">
+		    	<h1 style="margin-top:6vh;text-align:center;">Estadísticas finales</h1>
+		    	<hr>
+		    	<div class="row container-fluid" style="display:flex;">
+					<div class="col-md-6 col-12 fila">
+							<h1 class="propiedades_enu" id="cargaAsigEscuela1">Nom. escuela: 
+								
+							<h1>
+					</div>
+					<div class="col-md-6 col-12 fila">
+							<h1 class="propiedades_enu" id="cargaAsigNom1">Nom. asignatura:</h1>
+					</div>
+				</div>
+		    	<hr>
+		    	<div class="row container-fluid" class="calcu_asig" >
+		    		<div class="col-md-5">
+		    			<div id="piechart"></div>
+		    		</div>
+		    		<div class="col-md-7">
+		    			<div class="row">
+		    				<dir class="col-md-4" id="notaFinalMediaBruta">
+		    				</dir>
+		    				<dir class="col-md-4" id="notaFinalMediaAprobada"></dir>
+		    				<dir class="col-md-4" id="necesitaRecuperar"></dir>
+		    			</div>
+		    			<hr style="color:#c12a26;!important">
+		    			<div class="row"></div>
+		    		</div>
+		    	</div>
+				<hr style="z-index: 9999;">
+				<br>
+				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 20px;margin-bottom: 20px;" onclick="selectDIV(4);"> Volver</button></center>
 				<br><br><br>			    	
 			</div>
 		</div>
@@ -226,6 +271,17 @@
 	<script>
 		/**VARIABLES**/
 		listaAsignaturas = []; //contiene los objetos Asignatura
+		listaPorcentajesAsig = [] //lista que contendrá los porcentajes de los examenes de la asignatura seleccionada
+		listaNotaMinimaAsig = [] //lista que contendrá las notas minimas de los examenes de la asignatura seleccionada 
+		listaActosSuspendidos = [] //lista que contendrá los ids de los actos suspendidos a causa de no superar el minimo
+		listaActosSuspendidosMinimo = []
+		listaActosAprobados = [] //lista que contiene los ids de los actos superados
+		listaActosSuspendidosNotas = [] //contienen las notas de las asignaturas de los actos suspendidos
+		listaActosAprobadosNotas = []
+		listaActosSuspendidosNP = [] //lista de notas no presentadas, que son not null
+		actosCalculandoNota = [] //lista de actos que se encuentran en el calculo de notas
+		notaFinalBruta = 0
+
 		idNota = 0 //id de los textFields
 		cantidadIdsNota =0 
 	</script>
@@ -258,28 +314,39 @@
 			if(e == 1){
 				$('#asignaturas').css("display","none");
 				$('#calcularAsignatura').css("display","none");
-				$('#creaAsignatura').css("display","none");
+				$('#creaAsignatura').css("display","none"); 
+				$('#statsAsignatura').css("display","none");
 				$('#main').css("display","block");
 			}else if(e == 2){
 				$('#main').css("display","none");
 				$('#calcularAsignatura').css("display","none");
 				$('#creaAsignatura').css("display","none");
+				$('#statsAsignatura').css("display","none");
 				$('#asignaturas').css("display","block");
 			}else if(e == 3){
 				$('#main').css("display","none");
 				$('#asignaturas').css("display","none");
 				$('#calcularAsignatura').css("display","none");
+				$('#statsAsignatura').css("display","none");
 				$('#creaAsignatura').css("display","block");
 			}else if(e == 4){
 				$('#main').css("display","none");
 				$('#asignaturas').css("display","none");
 				$('#creaAsignatura').css("display","none");
+				$('#statsAsignatura').css("display","none");
 				$('#calcularAsignatura').css("display","block");
+			}else if(e == 5){
+				$('#main').css("display","none");
+				$('#asignaturas').css("display","none");
+				$('#creaAsignatura').css("display","none");
+				$('#calcularAsignatura').css("display","none");
+				$('#statsAsignatura').css("display","block");
 			}
 		}
 	</script>
 	<script>
 		/**CALCULAR LA NOTA FINAL**/
+		notaFinal = 0 //nota final provisional
 
 		function calcularNota(asignatura) {
 
@@ -294,12 +361,16 @@
 			console.log($("li").index(boton.parentNode.parentNode.parentNode)-5);
 			//obtengo la asignatura a calcular
 			var asigACalcu = listaAsignaturas[$("li").index(boton.parentNode.parentNode.parentNode)-5];
-			document.getElementById('cargaAsigEscuela').innerHTML = 'Nom. escuela: '+ asigACalcu.getEscuela();
-			document.getElementById('cargaAsigNom').innerHTML = 'Nom. asignatura: '+ asigACalcu.getAsig(); 
+			document.getElementById('cargaAsigEscuela').innerHTML = 'Nom. escuela: ' + asigACalcu.getEscuela();
+			document.getElementById('cargaAsigNom').innerHTML = 'Nom. asignatura: ' + asigACalcu.getAsig(); 
+			document.getElementById('cargaAsigEscuela1').innerHTML = 'Nom. escuela: ' + asigACalcu.getEscuela();
+			document.getElementById('cargaAsigNom1').innerHTML = 'Nom. asignatura: ' + asigACalcu.getAsig(); 
 			//2 encontrar sus parametros, asi como la cantidad de actos
 			console.log(asigACalcu.getActos())
 			var actos = asigACalcu.getActos()
-
+			//2.1 resetear listas
+			listaPorcentajesAsig = []
+			listaNotaMinimaAsig = []
 			//3 rellenar el html con los actos
 			document.getElementById("calcu_asig_list").innerHTML=""
 			actos.forEach((acto)=>{
@@ -326,7 +397,11 @@
 						</li>`
 				idNota ++
 				document.getElementById("calcu_asig_list").insertAdjacentHTML("beforeend", act);
+				listaPorcentajesAsig.push(acto.getPorcentaje()); 
+				listaNotaMinimaAsig.push(acto.getNotaMin())
+				actosCalculandoNota.push(acto)
 			})
+			console.log(listaPorcentajesAsig + listaNotaMinimaAsig)
 		}
 
 		function checkNumber(a){
@@ -347,11 +422,42 @@
 		}
 
 		function calcularNota(){
+			notaFinal = 0
+			notaFinalBruta = 0
+			listaActosSuspendidos = [] //reseteo la lista de actos suspendidos para poder añadir actos a stats
+			listaActosSuspendidosNotas = []
+			listaActosSuspendidosNP = []
 			var id = 0
 			for(id = 0; id < idNota; id++){
 				console.log(document.getElementById('nota'+id).value)
+				if(isNaN(parseFloat(document.getElementById('nota'+id).value))){
+					listaActosSuspendidosNP.push(id)
+
+				}else if(listaNotaMinimaAsig[id] > (document.getElementById('nota'+id).value)){
+					//listaActosSuspendidos.push(id) //añado el id del acto cateado por nota minima o no presentado
+					document.getElementById('nota'+id).value.innerHTML = '0'
+					listaActosSuspendidosMinimo.push(document.getElementById('nota'+id).value) //añado la nota
+					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
+				}else if (listaNotaMinimaAsig[id] <= (document.getElementById('nota'+id).value) && (document.getElementById('nota'+id).value) < 5.0) {
+					listaActosSuspendidos.push(document.getElementById('nota'+id).value) //añado la nota
+					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
+				}else{
+					listaActosAprobados.push(id)
+					listaActosAprobadosNotas.push(document.getElementById('nota'+id).value)
+					notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
+					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
+				}
 			}
-			console.log("FIN")
+			console.log("FIN: " +notaFinal)
+			//RELLENO LA PARTE ESTADISTICA CON LAS NOTAS BASICAS
+			document.getElementById('notaFinalMediaBruta').innerHTML = 'Nota media bruta: ' + notaFinalBruta.toFixed(3); 
+			document.getElementById('notaFinalMediaAprobada').innerHTML = 'Nota media en la parte aprobada: ' + notaFinal.toFixed(3);
+			var recu = "NO! 😓"
+			//compruebo si hace falta ir a recu
+			if(listaActosSuspendidos.length == 0 && notaFinal >= 5.0){
+				recu = "SI! 🥰"
+			}
+			document.getElementById('necesitaRecuperar').innerHTML = 'Aprobado? : ' + recu;
 		}		
 	</script>
 	<script>
@@ -535,6 +641,44 @@
 		}
 	</script>
 	<script>
+
+		//notaSuspendidos += listaPorcentajesAsig[a]/100;
+	  function draw(){
+	  	  google.charts.load('current', {'packages':['corechart']});
+	      google.charts.setOnLoadCallback(drawChart);
+
+	      function drawChart() {
+	      	var notaSuspendidos;
+	      	var notaAprobados;
+	      	var notaNulo; 
+
+	      	for(let a = 0; a < listaActosSuspendidosNotas.length; a ++){
+	      		notaSuspendidos += listaPorcentajesAsig[a]/100;
+	      	}
+
+	      	for(let a = 0; a < listaActosAprobadosNotas.length; a ++){
+	      		notaAprobados += listaPorcentajesAsig[a]/100;
+	      	}
+
+	        var data = google.visualization.arrayToDataTable([
+	          ['Acto', 'NotaFinal'],
+	          ['Examenes no aptos > mínimo',listaActosSuspendidos.length],
+	          ['Examenes aptos', listaActosAprobados.length],
+	          ['Datos anomalos', listaActosSuspendidosNP.length],
+	          ['Examenes no aptos < mínimo', listaActosSuspendidosMinimo.length]
+	        ]);
+
+	        var options = {
+	          title: 'Representación gráfica de notas'
+	        };
+
+	        var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+	        chart.draw(data, options);
+	      }
+	  }
+	</script>
+	<script>
 		class Acto {
 			constructor(tipoActo, notaMin, porcentaje, nota) {
 				this.tipoActo = tipoActo;
@@ -595,8 +739,23 @@
 			getActosL(){
 				return this.actos.length;
 			}
-		}
+		}		
 
+
+
+		/**DECLARACION DE ALGUNA ASIGNATURAS**/
+		EDA = new Asignatura("ETSINF", "EDA(CD)",[new Acto("Examen1",3,45),new Acto("Lab1",0,10),new Acto("Lab2",0,10),new Acto("Lab Entregas",0,5),new Acto("Preg. Últ. Mín. 1",0,10),new Acto("Preg. Últ. Mín. 2",0,10),new Acto("Preg. Últ. Mín. 3",0,10)])
+		ATD = new Asignatura("ETSINF", "ATD(CD)",[new Acto("Examen1",3,22.5),new Acto("Examen2",3,22.5),new Acto("Proyecto1",0,13.33333),new Acto("Proyecto2",0,13.33333),new Acto("Proyecto3",0,13.33333),new Acto("Portafolio1",0,7.5),new Acto("Portafolio2",0,7.5)])
+		BDA = new Asignatura("ETSINF", "BDA(CD)",[new Acto("Examen1",0,35.0),new Acto("Examen2",0,35.0),new Acto("Prueba corta1",0,5.0),new Acto("Prueba corta2",0,5.0),new Acto("Trabajo acad.",0,20.0)])
+		AIC = new Asignatura("ETSINF", "AIC(G)",[new Acto("Examen",0,35.0),new Acto("Examen2",0,35.0),new Acto("Practicas",0,20.0),new Acto("Test1",0,2.5),new Acto("Test2",0,2.5),new Acto("Test3",0,2.5),new Acto("Test4",0,2.5)])
+
+
+
+		listaAsignaturas.push(EDA)
+		listaAsignaturas.push(ATD)
+		listaAsignaturas.push(BDA)
+		listaAsignaturas.push(AIC)
+		mostrarListaAsignaturas()
 	</script>
 </body>
 </html>

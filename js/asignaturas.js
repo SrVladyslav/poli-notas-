@@ -1,0 +1,1 @@
+export EDA = new Asignatura("ETSINF", "EDA",[new Acto("Examen",4,40),new Acto("Examen",4,40),new Acto("Practica",4,10),new Acto("Practica",4,10)])
