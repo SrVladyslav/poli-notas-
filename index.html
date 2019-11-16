@@ -218,7 +218,7 @@
 				</ul>
 				<hr>
 				<br>
-				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 20px;margin-bottom: 20px;" onclick="calcularNota(this); selectDIV(5); draw()"> Calcular</button></center>
+				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 20px;margin-bottom: 20px;" onclick="calcularNota(this); selectDIV(5); draw()"> Calcular</button><br><h1 id="error_calculo" style="margin-bottom: 5px!important;"></h1><br><h1 id="error_calculo1" style="margin-top: 0!important;"></h1></center>
 				<br><br><br>			    	
 			</div>
 
@@ -249,12 +249,18 @@
 		    				<dir class="col-md-4" id="necesitaRecuperar"></dir>
 		    			</div>
 		    			<hr style="color:#c12a26;!important">
-		    			<div class="row"></div>
+		    			<div class="row">
+		    				<dir class="col-md-12">
+		    					<ul id="asignaturas_recu_list">
+									<li>Está vacio, es buena señal </li>
+								</ul>
+		    				</dir>
+		    			</div>
 		    		</div>
 		    	</div>
 				<hr style="z-index: 9999;">
 				<br>
-				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 20px;margin-bottom: 20px;" onclick="selectDIV(4);"> Volver</button></center>
+				<center ><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 20px;margin-bottom: 20px;" onclick="selectDIV(4);"> Volver</button><br><h1 id="error_calculo_1" style="margin-bottom: 5px!important;"><br><h1 id="error_calculo1_1" style="margin-top: 0!important;"></h1></center>
 				<br><br><br>			    	
 			</div>
 		</div>
@@ -274,6 +280,7 @@
 		listaPorcentajesAsig = [] //lista que contendrá los porcentajes de los examenes de la asignatura seleccionada
 		listaNotaMinimaAsig = [] //lista que contendrá las notas minimas de los examenes de la asignatura seleccionada 
 		listaActosSuspendidos = [] //lista que contendrá los ids de los actos suspendidos a causa de no superar el minimo
+		listaActosSuspendidosAsig = [] //lista que contendrá las asignaturas de los actos suspendidos a causa de no superar el minimo
 		listaActosSuspendidosMinimo = []
 		listaActosAprobados = [] //lista que contiene los ids de los actos superados
 		listaActosSuspendidosNotas = [] //contienen las notas de las asignaturas de los actos suspendidos
@@ -367,7 +374,7 @@
 			document.getElementById('cargaAsigNom1').innerHTML = 'Nom. asignatura: ' + asigACalcu.getAsig(); 
 			//2 encontrar sus parametros, asi como la cantidad de actos
 			console.log(asigACalcu.getActos())
-			var actos = asigACalcu.getActos()
+			actos = asigACalcu.getActos()
 			//2.1 resetear listas
 			listaPorcentajesAsig = []
 			listaNotaMinimaAsig = []
@@ -426,26 +433,53 @@
 			notaFinalBruta = 0
 			listaActosSuspendidos = [] //reseteo la lista de actos suspendidos para poder añadir actos a stats
 			listaActosSuspendidosNotas = []
+			listaActosSuspendidosMinimo = []
+			listaActosAprobados = []
+			listaActosAprobadosNotas = []
 			listaActosSuspendidosNP = []
+			listaActosSuspendidosAsig = []
+			listaActosNotas = []
+
+			$('#error_calculo').css("display","none");
+			$('#error_calculo1').css("display","none");
+			$('#error_calculo_1').css("display","none");
+			$('#error_calculo1_1').css("display","none");
 			var id = 0
 			for(id = 0; id < idNota; id++){
 				console.log(document.getElementById('nota'+id).value)
-				if(isNaN(parseFloat(document.getElementById('nota'+id).value) || isNaN(parseFloat(document.getElementById('nota'+id).value)) > 10.0)){
+				if(isNaN(parseFloat(document.getElementById('nota'+id).value) )){//|| document.getElementById('nota'+id).value > 10.0)){
 					listaActosSuspendidosNP.push(id)
+					listaActosNotas.push(0)
+					document.getElementById('error_calculo1').innerHTML = '➤ Recuerda: una nota es un número 🤭!'
+					document.getElementById('error_calculo1_1').innerHTML = '➤ Recuerda: una nota es un número 🤭!'
+					$('#error_calculo1').css("display","block");
+					$('#error_calculo1_1').css("display","block");
 					//document.getElementById('nota'+id).value.innerHTML = '0'
 				}else if(listaNotaMinimaAsig[id] > (document.getElementById('nota'+id).value)){
 					//listaActosSuspendidos.push(id) //añado el id del acto cateado por nota minima o no presentado
 					listaActosSuspendidosMinimo.push(document.getElementById('nota'+id).value) //añado la nota
 					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
+					listaActosNotas.push(document.getElementById('nota'+id).value)
+					//añado los actos cateados
 				}else if (listaNotaMinimaAsig[id] <= (document.getElementById('nota'+id).value) && (document.getElementById('nota'+id).value) < 5.0) {
 					listaActosSuspendidos.push(document.getElementById('nota'+id).value) //añado la nota
 					notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
 					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
+					listaActosNotas.push(document.getElementById('nota'+id).value)
 				}else{
 					listaActosAprobados.push(id)
 					listaActosAprobadosNotas.push(document.getElementById('nota'+id).value)
 					notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
 					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
+					listaActosNotas.push(document.getElementById('nota'+id).value)
+				}
+
+				/**errores**/
+				if(document.getElementById('nota'+id).value > 10.0){
+					document.getElementById('error_calculo').innerHTML = '➤ Tienes notas que superan 10.0 puntos 😋'
+					document.getElementById('error_calculo_1').innerHTML = '➤ Tienes notas que superan 10.0 puntos 😋'
+					$('#error_calculo').css("display","block");
+					$('#error_calculo_1').css("display","block");
 				}
 			}
 			console.log("FIN: " +notaFinal)
@@ -458,6 +492,49 @@
 				recu = "SI! 🥰"
 			}
 			document.getElementById('necesitaRecuperar').innerHTML = 'Aprobado? : ' + recu;
+			document.getElementById("asignaturas_recu_list").innerHTML =""
+
+			/**A rehacer bien**/
+			/*var listaNotasARepesca = []
+			//añado la lista de asignaturas suspendidas calculando la nota necesaria para aprobar
+			listaActosSuspendidos.forEach((act)=>{
+				var notaAct = listaActosSuspendidosNotas[act]
+				var porcentajeAct = listaPorcentajesAsig[act]
+				var notaASacar = 0
+				var i1
+				for(i1 = 0; i1 <= 10 && (porcentajeAct*i1+notaFinal) < 5; i1+=0.001){
+					notaASacar = i1
+				}
+				if((notaASacar * porcentajeAct + notaFinal) < 5.0){
+					//notaASacar = '10.0, No suficiente!'
+				}
+
+				listaActosSuspendidosAsig.push(actos[act])
+				var recu =`<li class="lista_asignaturas_style_a">
+							<div class="row" style="text-align:center;margin-top:20px;display:flex; flex-direction:row;">
+								<div class="col-md-3 col-12">
+									<h1 style="margin-top:10px; text-align:center; font-size:10px;vertical-align: center;"> 
+									<img src="./img/icons/exam.png" style="margin-top:10px;" class="ico" alt="E">
+									<b style="margin-top:10px;">Acto:</b> ${actos[act].getTipo()}</h1>
+								</div>
+								<div class="col-md-3 col-12">
+									<h1 style="text-align:center; margin-top:10px;font-size:10px;vertical-align: center;"> 
+									<img src="./img/icons/percentage.png" style="margin-top:10px;" class="ico" alt="E">
+									<b style="margin-top:10px;">Nota:</b> ${listaActosNotas[act]}</h1>
+								</div>
+								<div class="col-md-3 col-12">
+									<h1 style="text-align:center; margin-top:10px;font-size:10px;vertical-align: center;"> 
+									<img src="./img/icons/percentage.png" style="margin-top:10px;" class="ico" alt="E">
+									<b style="margin-top:10px;">Nota mín:</b> ${actos[act].getNotaMin()}</h1>
+								</div>
+								<div class="col-md-3 col-12" style="display:flex; flex-direction:row; text-align:center;margin:0;">
+									<h1 style="text-align:center;margin-top:10px; font-size:10px;vertical-align: center;"> 
+									<img src="./img/icons/report.png" style="margin-top:10px; margin:auto;" class="ico" alt="E"><b>A sacar: </b></h1>${notaASacar}</h1>
+								</div
+							</div>
+						</li>`
+				//document.getElementById("asignaturas_recu_list").insertAdjacentHTML("beforeend", recu);
+			})*/
 		}		
 	</script>
 	<script>
@@ -756,6 +833,11 @@
 		listaAsignaturas.push(BDA)
 		listaAsignaturas.push(AIC)
 		mostrarListaAsignaturas()
+	</script>
+
+	<script>
+		/**Calculo de la mejor opcion**/
+
 	</script>
 </body>
 </html>
