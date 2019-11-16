@@ -454,7 +454,7 @@
 			document.getElementById('notaFinalMediaAprobada').innerHTML = 'Nota media en la parte aprobada: ' + notaFinal.toFixed(3);
 			var recu = "NO! 😓"
 			//compruebo si hace falta ir a recu
-			if(listaActosSuspendidos.length == 0 && notaFinal >= 5.0){
+			if(listaActosSuspendidosMinimo.length == 0 && notaFinal >= 5.0){
 				recu = "SI! 🥰"
 			}
 			document.getElementById('necesitaRecuperar').innerHTML = 'Aprobado? : ' + recu;
