@@ -430,16 +430,16 @@
 			var id = 0
 			for(id = 0; id < idNota; id++){
 				console.log(document.getElementById('nota'+id).value)
-				if(isNaN(parseFloat(document.getElementById('nota'+id).value))){
+				if(isNaN(parseFloat(document.getElementById('nota'+id).value) || isNaN(parseFloat(document.getElementById('nota'+id).value)) > 10.0)){
 					listaActosSuspendidosNP.push(id)
-
+					//document.getElementById('nota'+id).value.innerHTML = '0'
 				}else if(listaNotaMinimaAsig[id] > (document.getElementById('nota'+id).value)){
 					//listaActosSuspendidos.push(id) //añado el id del acto cateado por nota minima o no presentado
-					document.getElementById('nota'+id).value.innerHTML = '0'
 					listaActosSuspendidosMinimo.push(document.getElementById('nota'+id).value) //añado la nota
 					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
 				}else if (listaNotaMinimaAsig[id] <= (document.getElementById('nota'+id).value) && (document.getElementById('nota'+id).value) < 5.0) {
 					listaActosSuspendidos.push(document.getElementById('nota'+id).value) //añado la nota
+					notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
 					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
 				}else{
 					listaActosAprobados.push(id)
