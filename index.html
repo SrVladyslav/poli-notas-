@@ -358,19 +358,15 @@
 		/**CALCULAR LA NOTA FINAL**/
 		notaFinal = 0 //nota final provisional
 
-		function calcularNota(asignatura) {
-
-		}
-
 		/**Rellena el form con los datos de la asignatura**/
 		function calcularAsignaturaRelleno(boton){
 			selectDIV(4);
 			idNota = 0
 			cantidadIdsNota = 0
 			//1 encontrar laasignatura
-			console.log($("li").index(boton.parentNode.parentNode.parentNode)-5);
+			console.log($("li").index(boton.parentNode.parentNode.parentNode)-6);
 			//obtengo la asignatura a calcular
-			var asigACalcu = listaAsignaturas[$("li").index(boton.parentNode.parentNode.parentNode)-5];
+			var asigACalcu = listaAsignaturas[$("li").index(boton.parentNode.parentNode.parentNode)-6];
 			document.getElementById('cargaAsigEscuela').innerHTML = 'Nom. escuela: ' + asigACalcu.getEscuela();
 			document.getElementById('cargaAsigNom').innerHTML = 'Nom. asignatura: ' + asigACalcu.getAsig(); 
 			document.getElementById('cargaAsigEscuela1').innerHTML = 'Nom. escuela: ' + asigACalcu.getEscuela();
@@ -379,6 +375,7 @@
 			console.log(asigACalcu.getActos())
 			actos = asigACalcu.getActos()
 			//2.1 resetear listas
+			//
 			listaPorcentajesAsig = []
 			listaNotaMinimaAsig = []
 			//3 rellenar el html con los actos
@@ -397,8 +394,8 @@
 									<b style="margin-top:10px;">Porcentaje:</b> ${acto.getPorcentaje()}</h1>
 								</div>
 								<div class="col-md-2 col-12" style="display:flex; flex-direction:row; text-align:center;margin:0;">
-									<h1 style="text-align:center;margin-top:10px; font-size:20px;vertical-align: center;"> 
-									<img src="./img/icons/report.png" style="margin-top:10px; margin:auto;" class="ico" alt="E"><b>Acto: </b></h1>
+									<center><h1 style="text-align:center;margin-top:10px; font-size:20px;vertical-align: center;"> 
+									<img src="./img/icons/report.png" style="margin-top:10px; margin:auto;" class="ico" alt="E"><b>Acto: </b></h1></center>
 								</div
 								<div class="col-md-2 col-12" style="width:100%;">
 									<input class="input-res-m" name="textfield" id="${'nota'+idNota}" type="text" placeholder="nota" onchange="checkNumber(this)">
@@ -411,7 +408,7 @@
 				listaNotaMinimaAsig.push(acto.getNotaMin())
 				actosCalculandoNota.push(acto)
 			})
-			console.log(listaPorcentajesAsig + listaNotaMinimaAsig)
+			console.log(listaNotaMinimaAsig)
 		}
 
 		function checkNumber(a){
@@ -450,7 +447,7 @@
 			var id = 0
 			for(id = 0; id < idNota; id++){
 				console.log(document.getElementById('nota'+id).value)
-				if(isNaN(parseFloat(document.getElementById('nota'+id).value) )){//|| document.getElementById('nota'+id).value > 10.0)){
+				if(isNaN(parseFloat((document.getElementById('nota'+id).value).replace(',','.')) )){//|| document.getElementById('nota'+id).value > 10.0)){
 					listaActosSuspendidosNP.push(id)
 					listaActosNotas.push(0)
 					document.getElementById('error_calculo1').innerHTML = '➤ Recuerda: una nota es un número 🤭!'
@@ -458,27 +455,27 @@
 					$('#error_calculo1').css("display","block");
 					$('#error_calculo1_1').css("display","block");
 					//document.getElementById('nota'+id).value.innerHTML = '0'
-				}else if(listaNotaMinimaAsig[id] > (document.getElementById('nota'+id).value)){
+				}else if(listaNotaMinimaAsig[id] > (document.getElementById('nota'+id).value).replace(',','.')){
 					//listaActosSuspendidos.push(id) //añado el id del acto cateado por nota minima o no presentado
-					listaActosSuspendidosMinimo.push(document.getElementById('nota'+id).value) //añado la nota
-					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
-					listaActosNotas.push(document.getElementById('nota'+id).value)
+					listaActosSuspendidosMinimo.push((document.getElementById('nota'+id).value).replace(',','.')) //añado la nota
+					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
+					listaActosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
 					//añado los actos cateados
-				}else if (listaNotaMinimaAsig[id] <= (document.getElementById('nota'+id).value) && (document.getElementById('nota'+id).value) < 5.0) {
-					listaActosSuspendidos.push(document.getElementById('nota'+id).value) //añado la nota
-					notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
-					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
-					listaActosNotas.push(document.getElementById('nota'+id).value)
+				}else if (listaNotaMinimaAsig[id] <= (document.getElementById('nota'+id).value).replace(',','.') && (document.getElementById('nota'+id).value).replace(',','.') < 5.0) {
+					listaActosSuspendidos.push((document.getElementById('nota'+id).value).replace(',','.')) //añado la nota
+					notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
+					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
+					listaActosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
 				}else{
 					listaActosAprobados.push(id)
-					listaActosAprobadosNotas.push(document.getElementById('nota'+id).value)
-					notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
-					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value))
-					listaActosNotas.push(document.getElementById('nota'+id).value)
+					listaActosAprobadosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
+					notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
+					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
+					listaActosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
 				}
 
 				/**errores**/
-				if(document.getElementById('nota'+id).value > 10.0){
+				if((document.getElementById('nota'+id).value).replace(',','.') > 10.0){
 					document.getElementById('error_calculo').innerHTML = '➤ Tienes notas que superan 10.0 puntos 😋'
 					document.getElementById('error_calculo_1').innerHTML = '➤ Tienes notas que superan 10.0 puntos 😋'
 					$('#error_calculo').css("display","block");
@@ -488,7 +485,7 @@
 			console.log("FIN: " +notaFinal)
 			//RELLENO LA PARTE ESTADISTICA CON LAS NOTAS BASICAS
 			document.getElementById('notaFinalMediaBruta').innerHTML = 'Nota media bruta: ' + notaFinalBruta.toFixed(3); 
-			document.getElementById('notaFinalMediaAprobada').innerHTML = 'Nota media en la parte aprobada: ' + notaFinal.toFixed(3);
+			document.getElementById('notaFinalMediaAprobada').innerHTML = 'Nota media en mínimo superado: ' + notaFinal.toFixed(3);
 			var recu = "NO! 😓"
 			//compruebo si hace falta ir a recu
 			if(listaActosSuspendidosMinimo.length == 0 && notaFinal >= 5.0){
