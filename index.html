@@ -75,7 +75,7 @@
 						<li id="button_add_asignatura" class="button_menu" onclick="selectDIV(3)">Crear asignatura</li>
 					</ul>
 					<ul class="lin">
-						<li ><h1 style="font-size: 10px;color: blue;">Creado por Vladyslav Mazurkevych</h1></li>
+						<!--<li ><h1 style="font-size: 10px;color: blue;">Creado por</h1><h1 style="font-size: 8px;color: blue;">Alexey Vilkov y Vladyslav Mazurkevych</h1></li>-->
 					</ul>
 				</div>
 			</div>
@@ -321,24 +321,31 @@
 
 	<script>
 		function selectDIV(e) {
+			document.getElementById('button_inicio').innerHTML = 'Inicio'
+			document.getElementById('button_asignatura').innerHTML = 'Asignaturas'
+			document.getElementById('button_add_asignatura').innerHTML = 'Crear asignatura'
+
 			if(e == 1){
 				$('#asignaturas').css("display","none");
 				$('#calcularAsignatura').css("display","none");
 				$('#creaAsignatura').css("display","none"); 
 				$('#statsAsignatura').css("display","none");
 				$('#main').css("display","block");
+				document.getElementById('button_inicio').innerHTML = '➤Inicio'
 			}else if(e == 2){
 				$('#main').css("display","none");
 				$('#calcularAsignatura').css("display","none");
 				$('#creaAsignatura').css("display","none");
 				$('#statsAsignatura').css("display","none");
 				$('#asignaturas').css("display","block");
+				document.getElementById('button_asignatura').innerHTML = '➤Asignaturas'
 			}else if(e == 3){
 				$('#main').css("display","none");
 				$('#asignaturas').css("display","none");
 				$('#calcularAsignatura').css("display","none");
 				$('#statsAsignatura').css("display","none");
 				$('#creaAsignatura').css("display","block");
+				document.getElementById('button_add_asignatura').innerHTML = '➤Crear asignatura'
 			}else if(e == 4){
 				$('#main').css("display","none");
 				$('#asignaturas').css("display","none");
@@ -364,9 +371,9 @@
 			idNota = 0
 			cantidadIdsNota = 0
 			//1 encontrar laasignatura
-			console.log($("li").index(boton.parentNode.parentNode.parentNode)-6);
+			console.log($("li").index(boton.parentNode.parentNode.parentNode)-5);
 			//obtengo la asignatura a calcular
-			var asigACalcu = listaAsignaturas[$("li").index(boton.parentNode.parentNode.parentNode)-6];
+			var asigACalcu = listaAsignaturas[$("li").index(boton.parentNode.parentNode.parentNode)-5];
 			document.getElementById('cargaAsigEscuela').innerHTML = 'Nom. escuela: ' + asigACalcu.getEscuela();
 			document.getElementById('cargaAsigNom').innerHTML = 'Nom. asignatura: ' + asigACalcu.getAsig(); 
 			document.getElementById('cargaAsigEscuela1').innerHTML = 'Nom. escuela: ' + asigACalcu.getEscuela();
@@ -393,7 +400,7 @@
 									<img src="./img/icons/percentage.png" style="margin-top:10px;" class="ico" alt="E">
 									<b style="margin-top:10px;">Porcentaje:</b> ${acto.getPorcentaje()}</h1>
 								</div>
-								<div class="col-md-2 col-12" style="display:flex; flex-direction:row; text-align:center;">
+								<div class="col-md-2 col-12" style="width:100%;display:flex; flex-direction:row; text-align:center;">
 									<h1 style="text-align:center;margin-top:10px; font-size:20px;vertical-align: center;"> 
 									<center><img src="./img/icons/report.png" style="margin-top:10px;" class="ico" alt="E"><b>Acto: </b></center></h1>
 								</div
@@ -554,7 +561,7 @@
 			//saveJSON(listaAsignaturas);
 
 			//voy a la ventana de asignaturas al crear la asignatura
-			//selectDIV(2) //descomentar al acabar los tests
+			selectDIV(2) //descomentar al acabar los tests
 			console.log(listaAsignaturas)
 			mostrarListaAsignaturas()
 		}
