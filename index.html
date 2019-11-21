@@ -116,7 +116,10 @@
 					<li>Asignatura 1</li>
 					<li>Asignatura 2</li>
 				</ul>
-				<hr style="margin-bottom: 0;">			    	
+				<hr style="margin-bottom: 0;">	
+				<div class="col-md-2 col-12 fila" style="width: 100%!important;">
+					<button type="button" class="next button_add_acto" onclick="downloadAsignaturas()">Guardar</button>
+				</div>
 			</div>
 			
 			<!--Crear asignatura-->
@@ -221,7 +224,7 @@
 				</ul>
 				<hr>
 				<br>
-				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 20px;margin-bottom: 20px;" onclick="calcularNota(this); selectDIV(5); draw()"> Calcular</button><br><h1 id="error_calculo" style="margin-bottom: 5px!important;"></h1><br><h1 id="error_calculo1" style="margin-top: 0!important;"></h1></center>
+				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 20px;margin-bottom: 20px;" onclick="calcularNota(this); selectDIV(5); draw();"> Calcular</button><br><h1 id="error_calculo" style="margin-bottom: 5px!important;"></h1><br><h1 id="error_calculo1" style="margin-top: 0!important;"></h1></center>
 				<br><br><br>			    	
 			</div>
 
@@ -761,6 +764,20 @@
 	        chart.draw(data, options);
 	      }
 	  }
+	</script>
+	<script>
+		function downloadAsignaturas() {
+			text = JSON.stringify(listaAsignaturas)
+			name = 'Asignaturas.json'
+			const a = document.createElement('a');
+	        const type = name.split(".").pop();
+			a.href = URL.createObjectURL( new Blob([text], { type:`text/${type === "txt" ? "plain" : type}` }) );
+			a.download = name;
+			a.click();
+		}
+	</script>
+	<script>
+		
 	</script>
 	<script>
 		class Acto {
