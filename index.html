@@ -645,7 +645,7 @@
 			});
 		}
 
-		function deleteAsig(b){
+		function deleteAsig(b){s
 			var txt;
 		    if (confirm("Seguro que quieres eliminar la asignatura?")) {
 		      	//eliminar despues de la listageneral (TERMINAR)
@@ -717,7 +717,7 @@
 				fila.appendChild(borrar)
 				document.getElementById("actos_list").appendChild(fila);
 				//sumo asignatura a la lista de asignaturas
-				asignaturasActuales.push(new Acto(tipoActo, notaMin, porcentaje));
+				asignaturasActuales.push(new Acto(tipoActo, parseFloat(notaMin), parseFloat(porcentaje)));
 			}else{
 				console.log("rellena todo")
 			}
