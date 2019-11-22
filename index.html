@@ -117,8 +117,10 @@
 					<li>Asignatura 2</li>
 				</ul>
 				<hr style="margin-bottom: 0;">	
-				<div class="col-md-2 col-12 fila" style="width: 100%!important;">
+				<div class="col-md-12 col-12 fila" style="width: 1000px!important;">
 					<button type="button" class="next button_add_acto" onclick="downloadAsignaturas()">Guardar</button>
+
+					<input id="contentFile" type="file" accept="application/json" class="inputfile" >Cargar</input>
 				</div>
 			</div>
 			
@@ -768,13 +770,70 @@
 	<script>
 		function downloadAsignaturas() {
 			text = JSON.stringify(listaAsignaturas)
-			name = 'Asignaturas.json'
+			var today = new Date();
+			var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+			name = 'AsignaturasPoliNotas-'+date+'.json'
 			const a = document.createElement('a');
 	        const type = name.split(".").pop();
 			a.href = URL.createObjectURL( new Blob([text], { type:`text/${type === "txt" ? "plain" : type}` }) );
 			a.download = name;
 			a.click();
 		}
+
+		//contenidoLectura;
+		function uploadAsignaturas(){
+			
+		}
+
+
+		document.getElementById('contentFile').onchange = function(evt) {
+        try {
+            let files = evt.target.files;
+            if (!files.length) {
+                alert('No file selected!');
+                return;
+            }
+            let file = files[0];
+            let reader = new FileReader();
+            const self = this;
+            reader.onload = (event) => {
+                console.log('FILE CONTENT', event.target.result);
+                var listaAsignaturasNuevas = []
+                //document.write('FILE CONTENT', event.target.result);
+                contenidoLectura = JSON.parse(event.target.result);
+                //Rellenando las Asignaturas y añadiendolas a la lista
+   				for(let i = 0; i < contenidoLectura.length; i ++){
+   					var actos1 = []
+   					//obteniendo los actos de la asignatura en curso
+   					for(let j = 0; j < contenidoLectura[i].actos.length; j++){
+   						var acto = new Acto(
+   							contenidoLectura[i].actos[j].tipoActo, 
+   							contenidoLectura[i].actos[j].notaMin, 
+   							contenidoLectura[i].actos[j].porcentaje)
+   						actos1.push(acto)
+   					}
+                	var asigNueva = new Asignatura(contenidoLectura[i].nomEscuela, contenidoLectura[i].nomAsig, actos1)
+                	listaAsignaturasNuevas.push(asigNueva)
+   				}
+   				//listaAsignaturas = listaAsignaturasNuevas
+   				//listaAsignaturas = asigNueva
+   				if (confirm("Sobreescribir la lista actual?")) {
+   					listaAsignaturas = listaAsignaturasNuevas
+   					mostrarListaAsignaturas()
+			    } else {
+			      	alert("Se concatenarán las asignaturas.");
+			      	listaAsignaturas = listaAsignaturas.concat(listaAsignaturasNuevas)
+			      	mostrarListaAsignaturas()
+			    }
+   				console.log(listaAsignaturas)
+            };
+            reader.readAsText(file);
+        } catch (err) {
+            console.error(err);
+            alert("JSON no válido...")
+        }
+
+    }
 	</script>
 	<script>
 		
