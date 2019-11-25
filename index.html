@@ -227,7 +227,7 @@
 				</ul>
 				<hr>
 				<br>
-				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;" onclick="selectDIV(2);"> Volver</button><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;margin-left: 5px!important;" onclick="calcularNota(this); selectDIV(5); draw();"> Calcular</button><br><h1 id="error_calculo" style="margin-bottom: 5px!important;"></h1><br><h1 id="error_calculo1" style="margin-top: 0!important;"></h1></center>
+				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;" onclick="confirmar()"> Volver</button><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;margin-left: 5px!important;" onclick="calcularNota(this); selectDIV(5); draw();"> Calcular</button><br><h1 id="error_calculo" style="margin-bottom: 5px!important;"></h1><br><h1 id="error_calculo1" style="margin-top: 0!important;"></h1></center>
 				<br><br><br>			    	
 			</div>
 
@@ -302,6 +302,13 @@
 
 		idNota = 0 //id de los textFields
 		cantidadIdsNota =0 
+	</script>
+	<script>
+		function confirmar() {
+			if (confirm('Si no calculaste la última modificación, esta se perderá. Quieres continuar?')) {
+				selectDIV(2); 
+			}
+		}
 	</script>
 	<script type="text/javascript" charset="uft-8">
 		activado = true
