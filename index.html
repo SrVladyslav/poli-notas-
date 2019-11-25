@@ -863,7 +863,7 @@
 			text = JSON.stringify(listaAsignaturas)
 			var today = new Date();
 			var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-			name = 'AsignaturasPoliNotas-'+date+'.json'
+			name = 'poliNotas_data-'+date+'.json'
 			const a = document.createElement('a');
 	        const type = name.split(".").pop();
 			a.href = URL.createObjectURL( new Blob([text], { type:`text/${type === "txt" ? "plain" : type}` }) );
