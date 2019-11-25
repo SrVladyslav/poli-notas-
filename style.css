@@ -38,6 +38,11 @@ nav {
   background-color: black;
 }
 
+.centr {
+  margin:  0 auto;
+  width: 100%!important;
+}
+
 #errorAsig {
   display: none;
   font-style: italic;
@@ -272,6 +277,11 @@ nav {
     background-color: black!important;
     margin: 2.5px;
     transition: all 0.3s ease;
+  }
+
+  .asignaturas_list {
+    height: 100%!important;
+    overflow-y: none!important;
   }
 
   .ico {
@@ -695,7 +705,12 @@ img {
   background-color: #ccc;
 }
 
+
+
+
 .button_add_acto {
+  display: inline-block;
+  border: 2px solid #666;
   height: 40px;
   width: 100px;
   border-radius: 10px;

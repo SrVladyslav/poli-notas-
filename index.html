@@ -117,10 +117,11 @@
 					<li>Asignatura 2</li>
 				</ul>
 				<hr style="margin-bottom: 0;">	
-				<div class="col-md-12 col-12 fila" style="width: 1000px!important;">
+				<div class="col-md-12 col-12 centr" style="display: flex; flex-direction: row;align-items: center;
+  justify-content: center;">
 					<button type="button" class="next button_add_acto" onclick="downloadAsignaturas()">Guardar</button>
-
-					<input id="contentFile" type="file" accept="application/json" class="inputfile" >Cargar</input>
+					<input id="contentFile" type="file" accept="application/json" class="inputfile" style="display: none;"></input>
+					<label for="contentFile" class="next button_add_acto" style="margin:5px!important;"> Cargar </label>
 				</div>
 			</div>
 			
@@ -174,7 +175,7 @@
 						<div class="col-md-6 col-0 fila">
 						</div>
 						<div class="col-md-3 col-12 fila">
-							<h1 class="propiedades_enu">Porcentaje total: </h1>
+							<h1 class="propiedades_enu" id="porcentajeSuma">Porcentaje total: 0%</h1>
 						</div>
 						<div class="col-md-3 col-0 fila"></div>
 					</div>
@@ -284,6 +285,7 @@
 	  </script>
 	<script>
 		/**VARIABLES**/
+		porcentajeGlobal = 0 //Porcentaje global de la suma de los porcentajes en la creacion de la asignatura
 		listaAsignaturas = []; //contiene los objetos Asignatura
 		listaPorcentajesAsig = [] //lista que contendrá los porcentajes de los examenes de la asignatura seleccionada
 		listaNotaMinimaAsig = [] //lista que contendrá las notas minimas de los examenes de la asignatura seleccionada 
@@ -706,27 +708,96 @@
 			}
 			if(tipoActo != "" &&
 				notaMin != "" && porcentaje!= ""){
-				var fila = document.createElement("DIV");
-				fila.setAttribute("style", "height: 100%;border-color:black;");
-				fila.setAttribute("style", "background-color:white;");
-				var info = document.createTextNode(contador + " -Acto [ "+ tipoActo +" ] nota mínima [ "+
-					notaMin + " ] porcentaje [ " + porcentaje + "% ].");
-				contador++
-				var borrar = document.createElement("BUTTON");
-				borrar.innerHTML = "X";
-				borrar.setAttribute("style","position:absolute; height:30px;text-color: black; width: 40px; border-radius: 80px;margin:0;margin-top: 14px; background-color:white;border-color: black;padding-top: -20px!important;font-size: 15px;border-color:#c00;");
-				borrar.onclick = function() {
-					document.getElementById("actos_list").removeChild(this.parentNode)
-				}
-				fila.appendChild(info);
-				fila.appendChild(borrar)
-				document.getElementById("actos_list").appendChild(fila);
-				//sumo asignatura a la lista de asignaturas
+				porcentajeGlobal += parseFloat(porcentaje);//sumo el porcentaje al global
+				document.getElementById("porcentajeSuma").innerHTML = "Porcentaje total: "+parseFloat(porcentajeGlobal) + "%"
+				var act = `<li class="lista_asignaturas_style">
+									<div class="row" style="display:flex; flex-direction:row;">
+										<div class="col-md-9" style="margin-top: 20px;">
+											<div class="row" style="text-align:center;">
+												<div class="col-md-4 col-12">
+													<h1 style="text-align:center; font-size:20px;vertical-align: center;"> 
+													<img src="./img/icons/exam.png" class="ico" alt="E">
+													<b>Escuela:</b> ${tipoActo}</h1>
+												</div>
+												<div class="col-md-4 col-12">
+													<h1 style="text-align:center; font-size:20px;vertical-align: center;"> 
+													<img src="./img/icons/report.png" class="ico" alt="E">
+													<b>Asignatura:</b> ${notaMin}</h1>
+												</div>
+												<div class="col-md-4 col-12">
+													<h1 style="text-align:center; font-size:20px;vertical-align: center;"> 
+													<img src="./img/icons/percentage.png" class="ico" alt="E">
+													<b>NºActos:</b> ${porcentaje}</h1>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-2" style="vertical-align: middle;display:flex;flex-direction:row;" id="5">
+											<button type="button" style="border-color: #c12a26;margin-left:5px;" class="c button_select" onclick="deleteAsigN(this)" >Eliminar</button>
+										</div>
+										<divc class="col-1">
+											
+										</div>
+									</div>
+								</li>`
+				document.getElementById("actos_list").insertAdjacentHTML("beforeend", act);
 				asignaturasActuales.push(new Acto(tipoActo, parseFloat(notaMin), parseFloat(porcentaje)));
 			}else{
 				console.log("rellena todo")
+				alert("Rellena todos los campos! 🤓")
 			}
 
+		}
+
+		function deleteAsigN(b){
+			var txt;
+		    if (confirm("Seguro que quieres eliminar la asignatura?")) {
+
+		    	console.log(b.parentNode.parentNode.parentNode + "Asignatura")
+		    	porcentajeGlobal -= parseFloat(asignaturasActuales[$("li").index(b.parentNode.parentNode.parentNode)-10].getPorcentaje());//sumo el porcentaje al global
+				document.getElementById("porcentajeSuma").innerHTML = "Porcentaje total: "+parseFloat(porcentajeGlobal) + "%"
+
+				console.log($("li").index(b.parentNode.parentNode.parentNode)-10);
+				asignaturasActuales.splice($("li").index(b.parentNode.parentNode.parentNode)-10, 1 );
+		      	mostrarListaAsignaturasN();
+		    }
+		}
+
+		function mostrarListaAsignaturasN(){
+
+			document.getElementById("actos_list").innerHTML = "";
+
+			asignaturasActuales.forEach(function(elemento){
+				var act = `<li class="lista_asignaturas_style">
+									<div class="row" style="display:flex; flex-direction:row;">
+										<div class="col-md-9" style="margin-top: 20px;">
+											<div class="row" style="text-align:center;">
+												<div class="col-md-4 col-12">
+													<h1 style="text-align:center; font-size:20px;vertical-align: center;"> 
+													<img src="./img/icons/exam.png" class="ico" alt="E">
+													<b>Acto:</b> ${elemento.getTipo()}</h1>
+												</div>
+												<div class="col-md-4 col-12">
+													<h1 style="text-align:center; font-size:20px;vertical-align: center;"> 
+													<img src="./img/icons/report.png" class="ico" alt="E">
+													<b>Nota mín. :</b> ${elemento.getNotaMin()}</h1>
+												</div>
+												<div class="col-md-4 col-12">
+													<h1 style="text-align:center; font-size:20px;vertical-align: center;"> 
+													<img src="./img/icons/percentage.png" class="ico" alt="E">
+													<b>Porcentaje:</b> ${elemento.getPorcentaje()}</h1>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-2" style="vertical-align: middle;display:flex;flex-direction:row;" id="5">
+											<button type="button" style="border-color: #c12a26;margin-left:5px;" class="c button_select" onclick="deleteAsigN(this)" >Eliminar</button>
+										</div>
+										<divc class="col-1">
+											
+										</div>
+									</div>
+								</li>`
+				document.getElementById("actos_list").insertAdjacentHTML("beforeend", act);
+			});
 		}
 	</script>
 	<script>
