@@ -557,7 +557,7 @@
 				var nomEscuela = document.getElementById("nomEscuela_f").value;
 				var nomAsignatura = document.getElementById("nomAsignatura_f").value;
 			if(nomEscuela != "" && nomAsignatura != "" &&
-			 	 asignaturasActuales.length() > 0){
+			 	 asignaturasActuales[0] != null){
 
 				contador = 1 //reseteo el contador de
 				listaAsignaturas.push(new Asignatura(nomEscuela,nomAsignatura,asignaturasActuales))
