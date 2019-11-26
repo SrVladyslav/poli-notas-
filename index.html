@@ -110,7 +110,7 @@
 			</div>
 	
 			<div class="col-md-10 col-12 programa asignaturas_list_div" id="asignaturas">
-		    	<h1 style="margin-top:6vh;text-align:center;">Asignaturas disponibles</h1>
+		    	<h1 style="margin-top:6vh;text-align:center;" class="title_style">Asignaturas disponibles</h1>
 		    	<hr>
 		    	<ul id="asignaturas_list">
 					<li>Asignatura 1</li>
@@ -128,7 +128,7 @@
 			<!--Crear asignatura-->
 			<div class="col-md-10 col-12 programa" id="creaAsignatura">
 				<div class="asignaturas_title">
-					<h1 style="margin-top:5vh;">Crear asignatura</h1>
+					<h1 style="margin-top:5vh;" class="title_style">Crear asignatura</h1>
 					<hr>						
 					<div class="row container-fluid" style="display:flex;">
 						<div class="col-md-3 col-12 fila">
@@ -146,7 +146,7 @@
 					</div>
 					<hr>
 					<br>
-					<h1 style="margin-top:5vh;">Actos de evaluación: </h1>
+					<h1 style="margin-top:5vh;" class="title_style">Actos de evaluación: </h1>
 					<hr>
 					<div class="row container-fluid" style="display:flex;">
 						<div class="col-md-2 col-12 fila">
@@ -209,7 +209,7 @@
 
 			<!--Calcular Asignatura-->
 			<div class="col-md-10 col-12 programa asignaturas_list_div" id="calcularAsignatura">
-		    	<h1 style="margin-top:6vh;text-align:center;">Calcular nota</h1>
+		    	<h1 style="margin-top:6vh;text-align:center;" class="title_style">Calcular nota</h1>
 		    	<hr>
 		    	<div class="row container-fluid" style="display:flex;">
 					<div class="col-md-6 col-12 fila">
@@ -233,7 +233,7 @@
 
 			<!--Stats Asignatura-->
 			<div class="col-md-10 col-12 programa asignaturas_list_div" id="statsAsignatura" style="height: 100vh!important;">
-		    	<h1 style="margin-top:6vh;text-align:center;">Estadísticas finales</h1>
+		    	<h1 style="margin-top:6vh;text-align:center;" class="title_style">Estadísticas finales</h1>
 		    	<hr>
 		    	<div class="row container-fluid" style="display:flex;">
 					<div class="col-md-6 col-12 fila">
@@ -420,12 +420,15 @@
 									<img src="./img/icons/percentage.png" style="margin-top:10px;" class="ico" alt="E">
 									<b style="margin-top:10px;">Porcentaje:</b> ${acto.getPorcentaje()}</h1>
 								</div>
-								<div class="col-md-2 col-12" style="width:100%;display:flex; flex-direction:row; text-align:center;">
-									<h1 style="text-align:center;margin-top:10px; font-size:20px;vertical-align: center;"> 
-									<center><img src="./img/icons/report.png" style="margin-top:10px;" class="ico" alt="E"><b>Acto: </b></center></h1>
-								</div
-								<div class="col-md-2 col-12" style="width:100%;">
-									<input class="input-res-m" name="textfield" id="${'nota'+idNota}" value="${notaIn}" type="text" placeholder="nota" onchange="checkNumber(this)">
+								<div class="col-md-4 col-12 inputAsigVal" style="width:100%; display:flex;">
+									<div style="margin:0;align-items:center;">
+										<h1 style="text-align:center; margin-top:10px;font-size:20px;vertical-align: center;"> 
+										<img src="./img/icons/report.png" style="margin-top:10px;" class="ico" alt="E">
+										<b style="margin-top:10px;">Nota:</b>Acto:</h1>
+									</div>
+									<div style="margin:0;">
+										<input class="input-res-m" name="textfield" id="${'nota'+idNota}" value="${notaIn}" type="text" placeholder="nota" onchange="checkNumber(this)">
+									</div>
 								</div>
 							</div>
 						</li>`

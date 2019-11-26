@@ -50,6 +50,11 @@ nav {
   color: #c12a26!important;
 }
 
+.inputAsigVal {
+  flex-direction: row;
+  text-align: center;
+}
+
 .propiedades_enu {
   font-size: 25px;
 }
@@ -251,6 +256,10 @@ nav {
   }
 }
 @media screen and (max-width: 768px){
+
+  .inputAsigVal {
+    flex-direction: column;
+  }
 
   #calcu_asig_list {
     list-style:none;
@@ -461,15 +470,6 @@ img {
   margin-left: 1.5em !important;
   font-size: 2em;
   font-weight: bold;
-}
-
-.title_style {
-    font-size: 4em;
-    font-family: 'Roboto', regular;
-    /*font-family: wattmobile_1;*/
-    font-weight: bold;
-    color: white!important;
-    margin:0.5em;
 }
 
 .subtitle_style {
@@ -1005,9 +1005,6 @@ hr{
     .title_main_style {
       font-size: 5em;
     }
-    .title_style {
-      font-size: 2.5em;
-    }
     .subtitle_style {
       font-size: 1.5em;
     }
@@ -1075,12 +1072,17 @@ hr{
     .footer_text {
       font-size: 10px;
     }
+
+    .title_style {
+      font-size: 25px!important;
+    }
+
+    .propiedades_enu {
+      font-size: 15px;
+    }
 }
 
 @media only screen and (max-width: 360px) {
-    .title_style {
-        font-size: 1.5em;
-    }
     .group_style {
         font-size: 1em;
     }
