@@ -219,14 +219,14 @@ nav {
   overflow-x:hidden;
   width:100%;
   height: 100%!important;
-  max-height: 45vh!important;
+  /*max-height: 45vh!important;*/
   margin:0;
 }
 
 .calcu_asig {
   list-style:none;
   overflow-y:auto!important;
-  overflow-x:hidden;
+  overflow-x:hidden!important;
   width:100%;
   height: 100%!important;
   max-height: 40vh!important;
@@ -263,11 +263,11 @@ nav {
 
   #calcu_asig_list {
     list-style:none;
-    overflow-y:auto!important;
-    overflow-x:hidden;
+    overflow-y:inherit!important;
+    overflow-x:hidden!important;
     width:100%;
-    height: 100%!important;
-    max-height: 80vh!important;
+    height:;/*100%!important;*/
+    /*max-height: 80vh!important;*/
     margin:0;
   }
   .button_add_acto {
@@ -635,6 +635,22 @@ img {
 }
 
 #asignaturas_list li:nth-child(even):hover {
+  background-color:  gray;
+}
+
+#actos_list li:nth-child(even) {
+  background:  #ccc;
+}
+
+#actos_list li:nth-child(even):hover {
+  background-color:  gray;
+}
+
+#asignaturas_recu_list li:nth-child(even) {
+  background:  #ccc;
+}
+
+#asignaturas_recu_list li:nth-child(even):hover {
   background-color:  gray;
 }
 
