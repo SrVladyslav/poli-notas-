@@ -227,7 +227,7 @@
 				</ul>
 				<hr>
 				<br>
-				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;" onclick="confirmar()"> Volver</button><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;margin-left: 5px!important;" onclick="calcularNota(this); selectDIV(5); draw();"> Calcular</button><br><h1 id="error_calculo" style="margin-bottom: 5px!important;"></h1><br><h1 id="error_calculo1" style="margin-top: 0!important;"></h1></center>
+				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;" onclick="confirmar()"> Volver</button><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;margin-left: 5px!important;" onclick="calcularNota(this); selectDIV(5); draw();getMejorAsig(asigACalcu);"> Calcular</button><br><h1 id="error_calculo" style="margin-bottom: 5px!important;"></h1><br><h1 id="error_calculo1" style="margin-top: 0!important;"></h1></center>
 				<br><br><br>			    	
 			</div>
 
@@ -299,6 +299,7 @@
 		listaActosSuspendidosNP = [] //lista de notas no presentadas, que son not null
 		actosCalculandoNota = [] //lista de actos que se encuentran en el calculo de notas
 		notaFinalBruta = 0
+		listaActosARecuperar = [] //lista de asignaturas que la persona podria recuperar para x asignatura
 
 		idNota = 0 //id de los textFields
 		cantidadIdsNota =0 
@@ -375,6 +376,8 @@
 				$('#statsAsignatura').css("display","block");
 			}
 		}
+
+		selectDIV(1);
 	</script>
 	<script>
 		/**CALCULAR LA NOTA FINAL**/
@@ -441,6 +444,30 @@
 			console.log(listaNotaMinimaAsig)
 		}
 
+
+		/**Devuelve la lista ordenada de asignaturas que se podria presentarse a recuperar para subir nota**/
+		listaSagrada = [] //lista de asignaturas que presentarse
+		function getMejorAsig(asigACalcu){
+			listaSagrada = []
+			listaActosARecuperar = []
+			var acts = asigACalcu.getActos()
+			console.log(acts)
+			var i = 0
+			acts.forEach((a)=>{
+				//console.log(a.getNota())
+				//para salvar deberia de sacar
+				if(a.getNota() < 5.0){
+					listaSagrada[i] = a.getPorcentaje()/100 * 5 //nota final al sacar un 5
+					a.setNotaASacar(a.getPorcentaje()/100 * 5)
+					listaActosARecuperar.push(a)
+				}else{
+					listaSagrada[i] = 0
+				}
+
+				i++
+			})
+			console.log("Lista sagrada: " +listaSagrada.sort(function(a,b){return a - b;}))
+		}
 		function checkNumber(a){
 			$(a).focusout(function() {
 			    if ($(a).val().length > 2 || isNaN(Number($(a).val()))) {
@@ -525,50 +552,13 @@
 			if(listaActosSuspendidosMinimo.length == 0 && notaFinal >= 5.0){
 				recu = "SI! 🥰"
 			}
+
 			document.getElementById('necesitaRecuperar').innerHTML = 'Aprobado? : ' + recu;
-			document.getElementById("asignaturas_recu_list").innerHTML =""
+			document.getElementById("asignaturas_recu_list").innerHTML ="";
 
-			/**A rehacer bien**/
-			/*var listaNotasARepesca = []
-			//añado la lista de asignaturas suspendidas calculando la nota necesaria para aprobar
-			listaActosSuspendidos.forEach((act)=>{
-				var notaAct = listaActosSuspendidosNotas[act]
-				var porcentajeAct = listaPorcentajesAsig[act]
-				var notaASacar = 0
-				var i1
-				for(i1 = 0; i1 <= 10 && (porcentajeAct*i1+notaFinal) < 5; i1+=0.001){
-					notaASacar = i1
-				}
-				if((notaASacar * porcentajeAct + notaFinal) < 5.0){
-					//notaASacar = '10.0, No suficiente!'
-				}
-
-				listaActosSuspendidosAsig.push(actos[act])
-				var recu =`<li class="lista_asignaturas_style_a">
-							<div class="row" style="text-align:center;margin-top:20px;display:flex; flex-direction:row;">
-								<div class="col-md-3 col-12">
-									<h1 style="margin-top:10px; text-align:center; font-size:10px;vertical-align: center;"> 
-									<img src="./img/icons/exam.png" style="margin-top:10px;" class="ico" alt="E">
-									<b style="margin-top:10px;">Acto:</b> ${actos[act].getTipo()}</h1>
-								</div>
-								<div class="col-md-3 col-12">
-									<h1 style="text-align:center; margin-top:10px;font-size:10px;vertical-align: center;"> 
-									<img src="./img/icons/percentage.png" style="margin-top:10px;" class="ico" alt="E">
-									<b style="margin-top:10px;">Nota:</b> ${listaActosNotas[act]}</h1>
-								</div>
-								<div class="col-md-3 col-12">
-									<h1 style="text-align:center; margin-top:10px;font-size:10px;vertical-align: center;"> 
-									<img src="./img/icons/percentage.png" style="margin-top:10px;" class="ico" alt="E">
-									<b style="margin-top:10px;">Nota mín:</b> ${actos[act].getNotaMin()}</h1>
-								</div>
-								<div class="col-md-3 col-12" style="display:flex; flex-direction:row; text-align:center;margin:0;">
-									<h1 style="text-align:center;margin-top:10px; font-size:10px;vertical-align: center;"> 
-									<img src="./img/icons/report.png" style="margin-top:10px; margin:auto;" class="ico" alt="E"><b>A sacar: </b></h1>${notaASacar}</h1>
-								</div
-							</div>
-						</li>`
-				//document.getElementById("asignaturas_recu_list").insertAdjacentHTML("beforeend", recu);
-			})*/
+			//calculo las asignaturas necesarias
+			getMejorAsig(asigACalcu);
+			rellenarRecus();
 		}		
 	</script>
 	<script>
@@ -594,6 +584,15 @@
 				selectDIV(2) //descomentar al acabar los tests
 				console.log(listaAsignaturas)
 				mostrarListaAsignaturas()
+				//reseteo el form
+				document.getElementById('tipoActo_f').value=''
+				document.getElementById('nomAsignatura_f').value=''
+				document.getElementById('nomEscuela_f').value=''
+				document.getElementById('notaMin_f').value=''
+				document.getElementById('porcentaje_f').value=''
+				porcentajeGlobal = 0
+				document.getElementById("porcentajeSuma").innerHTML = "Porcentaje total: "+parseFloat(porcentajeGlobal) + "%"
+
 			}else {
 				alert("Rellena todos los campos! 🤓")
 			}
@@ -830,6 +829,43 @@
 			});
 		}
 	</script>
+
+	<script>
+		//relleno la lista de recuperacion
+		//asignaturas_recu_list
+		function rellenarRecus(){
+
+			//document.getElementById("asignaturas_recu_list").innerHTML = "";
+			var actosACalcula = asigACalcu.getActos()
+			console.log("A ACTUALES: "+listaActosARecuperar)//listaActosARecuperar)
+			listaActosARecuperar.forEach(function(elemento){
+				var act = `<li class="lista_asignaturas_style">
+									<div class="row" style="display:flex; flex-direction:row;">
+										<div class="col-md-12" style="margin-top: 20px;">
+											<div class="row" style="text-align:center;">
+												<div class="col-md-4 col-12">
+													<h1 style="text-align:center; font-size:15px;vertical-align: center;"> 
+													<img src="./img/icons/exam.png" class="ico" alt="E">
+													<b>Acto:</b> ${elemento.getTipo()}</h1>
+												</div>
+												<div class="col-md-4 col-12">
+													<h1 style="text-align:center; font-size:15px;vertical-align: center;"> 
+													<img src="./img/icons/report.png" class="ico" alt="E">
+													<b>Nota:</b> ${elemento.getNota()}</h1>
+												</div>
+												<div class="col-md-4 col-12">
+													<h1 style="text-align:center; font-size:15px;vertical-align: center;"> 
+													<img src="./img/icons/books.png" class="ico" alt="E">
+													<b>5 sobre la final:</b> ${elemento.getNotaASacar()}</h1>
+												</div>
+											</div>
+										</div>
+									</div>
+								</li>`
+				document.getElementById("asignaturas_recu_list").insertAdjacentHTML("beforeend", act);
+			});
+		}
+	</script>
 	<script>
 
 		//notaSuspendidos += listaPorcentajesAsig[a]/100;
@@ -937,11 +973,12 @@
 	</script>
 	<script>
 		class Acto {
-			constructor(tipoActo, notaMin, porcentaje, nota) {
+			constructor(tipoActo, notaMin, porcentaje, nota, notaASacar) {
 				this.tipoActo = tipoActo;
 				this.notaMin = notaMin;
 				this.porcentaje = porcentaje;
 				this.nota = nota;
+				this.notaASacar = notaASacar;
 			}
 
 			toString() {
@@ -968,13 +1005,23 @@
 			setNota(nota) {
 				this.nota = nota;
 			}
+
+			setNotaASacar(nota) {
+				this.notaASacar = nota;
+			}
+
+			getNotaASacar() {
+				return this.notaASacar;
+			}
 		}
 
 		class Asignatura{
-			constructor(nomEscuela, nomAsig, actos){
+			constructor(nomEscuela, nomAsig, actos, actosAprobados, actosSuspendidos){
 				this.nomEscuela = nomEscuela;
 				this.nomAsig = nomAsig;
 				this.actos = actos;
+				this.actosAprobados = actosAprobados;
+				this.actosSuspendidos = actosSuspendidos;
 			}
 
 			toString(){
