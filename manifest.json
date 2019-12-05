@@ -1,0 +1,9 @@
+{  
+"name": "poli[notas]",   
+"short_name": "poli[notas]", 
+"lang": "en-US",     
+"start_url": "/index.html", 
+"display": "standalone",  
+"background_color": "white",   
+"theme_color": "black" 
+}
