@@ -914,9 +914,10 @@
 	        const type = name.split(".").pop();
 			a.href = URL.createObjectURL( new Blob([text], { type:`text/${type === "txt" ? "plain" : type}` }) );
 			a.download = name;
+			document.body.appendChild(a);//puede que sobre
 			a.click();
+			document.body.removeChild(a);//puede que sobre
 		}
-
 
 		document.getElementById('contentFile').onchange = function(evt) {
         try {
