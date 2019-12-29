@@ -1,0 +1,26 @@
+{
+  "name": "poli-notas-",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sw.js",
+  "dependencies": {
+    "expr-eval": "file:expr-eval",
+    "jquery": "^3.4.1",
+    "lodash": "^4.17.15",
+    "requirejs": "^2.3.6"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SrVladyslav/poli-notas-.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SrVladyslav/poli-notas-/issues"
+  },
+  "homepage": "https://github.com/SrVladyslav/poli-notas-#readme"
+}
