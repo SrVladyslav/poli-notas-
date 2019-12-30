@@ -231,7 +231,7 @@
 				</ul>
 				<hr>
 				<br>
-				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;" onclick="confirmar()"> Volver</button><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;margin-left: 5px!important;" onclick="calcularNota(this); selectDIV(5); draw();getMejorAsig(asigACalcu);"> Calcular</button><br><h1 id="error_calculo" style="margin-bottom: 5px!important;"></h1><br><h1 id="error_calculo1" style="margin-top: 0!important;"></h1></center>
+				<center><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;" onclick="confirmar()"> Volver</button><button type="button" class="next button_add_acto" style="margin:auto!important;margin-top: 5px;margin-left: 5px!important;" onclick="calcularNota(); selectDIV(5); draw();getMejorAsig(asigACalcu);"> Calcular</button><br><h1 id="error_calculo" style="margin-bottom: 5px!important;"></h1><br><h1 id="error_calculo1" style="margin-top: 0!important;"></h1></center>
 				<br><br><br>			    	
 			</div>
 
@@ -314,7 +314,7 @@
 					</div>
 					<br>
 					<button type="button" class="next button_generate_by_formula" onclick="generateAsignaturasByFormula()"> Generar</button>
-					<button type="button" class="next button_add_acto_by_formula" onclick="creaAsignatura()"> Crear</button>
+					<button type="button" class="next button_add_acto_by_formula" onclick="creaAsignaturaByFormula()"> Crear</button>
 					<br><br><br>
 				</div>
 			</div>
@@ -363,7 +363,7 @@
 			const burger= document.querySelector('.burger');
 			//Toggle nav
 			burger.addEventListener('click', () => {
-				console.log("hi  " + activado);
+				//console.log("hi  " + activado);
 				//nav.classList.toggle('nav_active');//burger-menu
 				//nav.classList.toggle('burger-menu');
 				//Animate links
@@ -386,11 +386,13 @@
 			document.getElementById('button_inicio').innerHTML = 'Inicio'
 			document.getElementById('button_asignatura').innerHTML = 'Asignaturas'
 			document.getElementById('button_add_asignatura').innerHTML = 'Crear asignatura'
+			document.getElementById('button_add_asignatura_by_formula').innerHTML = 'Crear con fórmula'
 
 			if(e == 1){
 				$('#asignaturas').css("display","none");
 				$('#calcularAsignatura').css("display","none");
 				$('#creaAsignatura').css("display","none"); 
+				$('#creaAsignaturaByFormula').css("display","none");
 				$('#statsAsignatura').css("display","none");
 				$('#main').css("display","block");
 				document.getElementById('button_inicio').innerHTML = '➤Inicio'
@@ -399,6 +401,7 @@
 				$('#calcularAsignatura').css("display","none");
 				$('#creaAsignatura').css("display","none");
 				$('#statsAsignatura').css("display","none");
+				$('#creaAsignaturaByFormula').css("display","none");
 				$('#asignaturas').css("display","block");
 				document.getElementById('button_asignatura').innerHTML = '➤Asignaturas'
 			}else if(e == 3){
@@ -430,6 +433,7 @@
 				$('#calcularAsignatura').css("display","none");
 				$('#statsAsignatura').css("display","none");
 				$('#creaAsignaturaByFormula').css("display","block");
+				document.getElementById('button_add_asignatura_by_formula').innerHTML = '➤Crear con fórmula'
 			}
 		}
 
@@ -454,7 +458,8 @@
 			document.getElementById('cargaAsigEscuela1').innerHTML = 'Nom. escuela: ' + asigACalcu.getEscuela();
 			document.getElementById('cargaAsigNom1').innerHTML = 'Nom. asignatura: ' + asigACalcu.getAsig(); 
 			//2 encontrar sus parametros, asi como la cantidad de actos
-			console.log(asigACalcu.getActos())
+			//console.log(asigACalcu.getActos())
+			//console.log(asigACalcu.getFormula())
 			actos = asigACalcu.getActos()
 			//2.1 resetear listas
 			//
@@ -504,25 +509,28 @@
 		/**Devuelve la lista ordenada de asignaturas que se podria presentarse a recuperar para subir nota**/
 		listaSagrada = [] //lista de asignaturas que presentarse
 		function getMejorAsig(asigACalcu){
-			listaSagrada = []
-			listaActosARecuperar = []
-			var acts = asigACalcu.getActos()
-			console.log(acts)
-			var i = 0
-			acts.forEach((a)=>{
-				//console.log(a.getNota())
-				//para salvar deberia de sacar
-				if(a.getNota() < 5.0){
-					listaSagrada[i] = a.getPorcentaje()/100 * 5 //nota final al sacar un 5
-					a.setNotaASacar(a.getPorcentaje()/100 * 5)
-					listaActosARecuperar.push(a)
-				}else{
-					listaSagrada[i] = 0
-				}
+			if(asigACalcu.getFormula()){
+			}else {
+				listaSagrada = []
+				listaActosARecuperar = []
+				var acts = asigACalcu.getActos()
+				//console.log(acts)
+				var i = 0
+				acts.forEach((a)=>{
+					//console.log(a.getNota())
+					//para salvar deberia de sacar
+					if(a.getNota() < 5.0){
+						listaSagrada[i] = a.getPorcentaje()/100 * 5 //nota final al sacar un 5
+						a.setNotaASacar(a.getPorcentaje()/100 * 5)
+						listaActosARecuperar.push(a)
+					}else{
+						listaSagrada[i] = 0
+					}
 
-				i++
-			})
-			console.log("Lista sagrada: " +listaSagrada.sort(function(a,b){return a - b;}))
+					i++
+				})
+			}
+			//console.log("Lista sagrada: " +listaSagrada.sort(function(a,b){return a - b;}))
 		}
 		function checkNumber(a){
 			$(a).focusout(function() {
@@ -537,8 +545,56 @@
 		/**Relleno la asignatura con las notas**/
 		function rellenar(nota, acto){
 			acto.setNota(document.getElementById(nota).value)
-			console.log(acto.getNota())
+			//console.log(acto.getNota())
 			//rellenar(this, ${acto})
+		}
+
+		function calcularNotaByFormula(){
+			notasTot = []
+			notasAptas = []
+			$('#error_calculo').css("display","none");
+			$('#error_calculo1').css("display","none");
+			$('#error_calculo_1').css("display","none");
+			$('#error_calculo1_1').css("display","none");
+			var id = 0
+			for(id = 0; id < idNota; id++){
+				console.log("NOTA DEL ELEMENTO: "+document.getElementById('nota'+id).value)
+				if(isNaN(parseFloat((document.getElementById('nota'+id).value).replace(',','.')) )){//|| document.getElementById('nota'+id).value > 10.0)){
+					listaActosSuspendidosNP.push(id)
+					document.getElementById('error_calculo1').innerHTML = '➤ Recuerda: una nota es un número 🤭!'
+					document.getElementById('error_calculo1_1').innerHTML = '➤ Recuerda: una nota es un número 🤭!'
+					$('#error_calculo1').css("display","block");
+					$('#error_calculo1_1').css("display","block");
+					//document.getElementById('nota'+id).value.innerHTML = '0'
+				}else{
+					notasTot.push((document.getElementById('nota'+id).value).replace(',','.'))
+				}
+				//GUARDO LA ULTIMA VERSION DE LA MODIFICACION DE NOTAS
+				asigACalcu.getActos()[id].setNota(document.getElementById('nota'+id).value)
+
+				/**errores**/
+				if((document.getElementById('nota'+id).value).replace(',','.') > 10.0){
+					document.getElementById('error_calculo').innerHTML = '➤ Tienes notas que superan 10.0 puntos 😋'
+					document.getElementById('error_calculo_1').innerHTML = '➤ Tienes notas que superan 10.0 puntos 😋'
+					$('#error_calculo').css("display","block");
+					$('#error_calculo_1').css("display","block");
+				}
+			}
+			notaFinal = calculateFormula(asigACalcu.getFormula()+'' ,notasTot)
+			notaFinalBruta = notaFinal
+			console.log("FIN: " +notaFinal)
+			//RELLENO LA PARTE ESTADISTICA CON LAS NOTAS BASICAS
+			document.getElementById('notaFinalMediaBruta').innerHTML = 'Nota media bruta: ' + notaFinalBruta.toFixed(3); 
+			document.getElementById('notaFinalMediaAprobada').innerHTML = ''
+			var recu = "NO! 😓"
+			//compruebo si hace falta ir a recu
+			if(notaFinal >= 5.0){
+				recu = "SI! 🥰"
+			}
+
+			document.getElementById('necesitaRecuperar').innerHTML = 'Aprobado? : ' + recu;
+			document.getElementById("asignaturas_recu_list").innerHTML ="";
+			rellenarRecus();
 		}
 
 		function calcularNota(){
@@ -552,69 +608,75 @@
 			listaActosSuspendidosNP = []
 			listaActosSuspendidosAsig = []
 			listaActosNotas = []
+			//prooves that the formula is not included
+			if(asigACalcu.getFormula()){
+				calcularNotaByFormula()
+				console.log("Calculando con la formula")
+			}else {
+				console.log("Calculando sin la formula")
+				$('#error_calculo').css("display","none");
+				$('#error_calculo1').css("display","none");
+				$('#error_calculo_1').css("display","none");
+				$('#error_calculo1_1').css("display","none");
+				var id = 0
+				for(id = 0; id < idNota; id++){
+					//console.log(document.getElementById('nota'+id).value)
+					if(isNaN(parseFloat((document.getElementById('nota'+id).value).replace(',','.')) )){//|| document.getElementById('nota'+id).value > 10.0)){
+						listaActosSuspendidosNP.push(id)
+						listaActosNotas.push(0)
+						document.getElementById('error_calculo1').innerHTML = '➤ Recuerda: una nota es un número 🤭!'
+						document.getElementById('error_calculo1_1').innerHTML = '➤ Recuerda: una nota es un número 🤭!'
+						$('#error_calculo1').css("display","block");
+						$('#error_calculo1_1').css("display","block");
+						//document.getElementById('nota'+id).value.innerHTML = '0'
+					}else if(listaNotaMinimaAsig[id] > (document.getElementById('nota'+id).value).replace(',','.')){
+						//listaActosSuspendidos.push(id) //añado el id del acto cateado por nota minima o no presentado
+						listaActosSuspendidosMinimo.push((document.getElementById('nota'+id).value).replace(',','.')) //añado la nota
+						notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
+						listaActosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
+						//añado los actos cateados
+					}else if (listaNotaMinimaAsig[id] <= (document.getElementById('nota'+id).value).replace(',','.') && (document.getElementById('nota'+id).value).replace(',','.') < 5.0) {
+						listaActosSuspendidos.push((document.getElementById('nota'+id).value).replace(',','.')) //añado la nota
+						notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
+						notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
+						listaActosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
+					}else{
+						listaActosAprobados.push(id)
+						listaActosAprobadosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
+						notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
+						notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
+						listaActosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
+					}
 
-			$('#error_calculo').css("display","none");
-			$('#error_calculo1').css("display","none");
-			$('#error_calculo_1').css("display","none");
-			$('#error_calculo1_1').css("display","none");
-			var id = 0
-			for(id = 0; id < idNota; id++){
-				console.log(document.getElementById('nota'+id).value)
-				if(isNaN(parseFloat((document.getElementById('nota'+id).value).replace(',','.')) )){//|| document.getElementById('nota'+id).value > 10.0)){
-					listaActosSuspendidosNP.push(id)
-					listaActosNotas.push(0)
-					document.getElementById('error_calculo1').innerHTML = '➤ Recuerda: una nota es un número 🤭!'
-					document.getElementById('error_calculo1_1').innerHTML = '➤ Recuerda: una nota es un número 🤭!'
-					$('#error_calculo1').css("display","block");
-					$('#error_calculo1_1').css("display","block");
-					//document.getElementById('nota'+id).value.innerHTML = '0'
-				}else if(listaNotaMinimaAsig[id] > (document.getElementById('nota'+id).value).replace(',','.')){
-					//listaActosSuspendidos.push(id) //añado el id del acto cateado por nota minima o no presentado
-					listaActosSuspendidosMinimo.push((document.getElementById('nota'+id).value).replace(',','.')) //añado la nota
-					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
-					listaActosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
-					//añado los actos cateados
-				}else if (listaNotaMinimaAsig[id] <= (document.getElementById('nota'+id).value).replace(',','.') && (document.getElementById('nota'+id).value).replace(',','.') < 5.0) {
-					listaActosSuspendidos.push((document.getElementById('nota'+id).value).replace(',','.')) //añado la nota
-					notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
-					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
-					listaActosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
-				}else{
-					listaActosAprobados.push(id)
-					listaActosAprobadosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
-					notaFinal += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
-					notaFinalBruta += listaPorcentajesAsig[id]/100 * parseFloat((document.getElementById('nota'+id).value).replace(',','.'))
-					listaActosNotas.push((document.getElementById('nota'+id).value).replace(',','.'))
+					//GUARDO LA ULTIMA VERSION DE LA MODIFICACION DE NOTAS
+					asigACalcu.getActos()[id].setNota(document.getElementById('nota'+id).value)
+
+					/**errores**/
+					if((document.getElementById('nota'+id).value).replace(',','.') > 10.0){
+						document.getElementById('error_calculo').innerHTML = '➤ Tienes notas que superan 10.0 puntos 😋'
+						document.getElementById('error_calculo_1').innerHTML = '➤ Tienes notas que superan 10.0 puntos 😋'
+						$('#error_calculo').css("display","block");
+						$('#error_calculo_1').css("display","block");
+					}
+				}
+				//console.log("Notas ultima version acto: " +asigACalcu.getActos())
+				//console.log("FIN: " +notaFinal)
+				//RELLENO LA PARTE ESTADISTICA CON LAS NOTAS BASICAS
+				document.getElementById('notaFinalMediaBruta').innerHTML = 'Nota media bruta: ' + notaFinalBruta.toFixed(3); 
+				document.getElementById('notaFinalMediaAprobada').innerHTML = 'Nota media en mínimo superado: ' + notaFinal.toFixed(3);
+				var recu = "NO! 😓"
+				//compruebo si hace falta ir a recu
+				if(listaActosSuspendidosMinimo.length == 0 && notaFinal >= 5.0){
+					recu = "SI! 🥰"
 				}
 
-				//GUARDO LA ULTIMA VERSION DE LA MODIFICACION DE NOTAS
-				asigACalcu.getActos()[id].setNota(document.getElementById('nota'+id).value)
+				document.getElementById('necesitaRecuperar').innerHTML = 'Aprobado? : ' + recu;
+				document.getElementById("asignaturas_recu_list").innerHTML ="";
 
-				/**errores**/
-				if((document.getElementById('nota'+id).value).replace(',','.') > 10.0){
-					document.getElementById('error_calculo').innerHTML = '➤ Tienes notas que superan 10.0 puntos 😋'
-					document.getElementById('error_calculo_1').innerHTML = '➤ Tienes notas que superan 10.0 puntos 😋'
-					$('#error_calculo').css("display","block");
-					$('#error_calculo_1').css("display","block");
-				}
+				//calculo las asignaturas necesarias
+				getMejorAsig(asigACalcu);
+				rellenarRecus();
 			}
-			console.log("Notas ultima version acto: " +asigACalcu.getActos())
-			console.log("FIN: " +notaFinal)
-			//RELLENO LA PARTE ESTADISTICA CON LAS NOTAS BASICAS
-			document.getElementById('notaFinalMediaBruta').innerHTML = 'Nota media bruta: ' + notaFinalBruta.toFixed(3); 
-			document.getElementById('notaFinalMediaAprobada').innerHTML = 'Nota media en mínimo superado: ' + notaFinal.toFixed(3);
-			var recu = "NO! 😓"
-			//compruebo si hace falta ir a recu
-			if(listaActosSuspendidosMinimo.length == 0 && notaFinal >= 5.0){
-				recu = "SI! 🥰"
-			}
-
-			document.getElementById('necesitaRecuperar').innerHTML = 'Aprobado? : ' + recu;
-			document.getElementById("asignaturas_recu_list").innerHTML ="";
-
-			//calculo las asignaturas necesarias
-			getMejorAsig(asigACalcu);
-			rellenarRecus();
 		}		
 	</script>
 	<script>
@@ -627,12 +689,12 @@
 
 				contador = 1 //reseteo el contador de
 				listaAsignaturas.push(new Asignatura(nomEscuela,nomAsignatura,asignaturasActuales))
-				console.log("ASIG:" + asignaturasActuales)
+				//console.log("ASIG:" + asignaturasActuales)
 				setTimeout(()=>{
 					asignaturasActuales = []//reseteo la lista para usarla de nuevo
 					//limpio los actos
 					actos_list.innerHTML = ""
-					console.log("ASIG pos:" + asignaturasActuales)
+					//console.log("ASIG pos:" + asignaturasActuales)
 				},1);
 				//saveJSON(listaAsignaturas);
 
@@ -1102,11 +1164,25 @@
 			return f
 		}
 
+		//calculates the value from formula changing the parameters by given values ot them
+		function calculateFormula(formula, vars) {
+			//obtaining parameters
+			var params = getExamsFromFormula(formula)
+			console.log("Parametros: "+params)
+			console.log("Variables: " +vars)
+			//replacing formula  by values
+			for(let i = 0; i < params.length; i++){
+				formula = formula.split(params[i]).join(vars[i])
+			}
+			console.log("FORMULA EVALUADA"+formula)
+			return eval(formula)
+		}
+
 		//generating exams
 		function generateAsignaturasByFormula() {
 			actsByFormula = []
 			getExamsFromFormula(document.getElementById("Formula_f").value).forEach((f) =>{
-				actsByFormula.push(new Acto(f,0))
+				actsByFormula.push(new Acto(f,0,'formula'))
 			})
 			//showing acts
 			function mostrarListaAsignaturasByFormula(){
@@ -1129,7 +1205,7 @@
 														<b>Nota mínima:</b></h1>
 													</div>
 													<div class="col-md-4 col-12" style="margin-top:-25px;">
-														<input class="input-res-m" name="textfield" value="0" type="text" placeholder="nota" onchange="checkNumber(this)">
+														<input class="input-res-m" id="${elemento.getTipo()}" name="textfield" type="text" placeholder="0" onchange="checkNumber(this)">
 													</div>
 												</div>
 											</div>
@@ -1140,25 +1216,37 @@
 			}
 			mostrarListaAsignaturasByFormula()
 		}
-	</script>
+		function creaAsignaturaByFormula(){
+				var nomEscuela = document.getElementById("nomEscuelaByFormula_f").value;
+				var nomAsignatura = document.getElementById("nomAsignaturaByFormula_f").value;
+				var formula = document.getElementById("Formula_f").value;
+				if(nomEscuela != "" && nomAsignatura != "" &&
+				 	 actsByFormula[0] != null){
 
-	<script>
-		function getFormulaFunc(formula){
-			//var Parser = require('expr-eval').Parser;
-			//import Parser from 'main.js' 
-			var parser = new Parser();
-			var expr = parser.parse(formula+'');
+					contador = 1 //reseteo el contador de
+					listaAsignaturas.push(new Asignatura(nomEscuela,nomAsignatura,actsByFormula,0,0,formula))
+					console.log("ASIG:" + asignaturasActuales)
+					setTimeout(()=>{
+						asignaturasActuales = []//reseteo la lista para usarla de nuevo
+						//limpio los actos
+						actos_list.innerHTML = ""
+						console.log("ASIG pos:" + asignaturasActuales)
+					},1);
+					//saveJSON(listaAsignaturas);
 
-			funPar = '' //function params
-			console.log(expr.symbols())
-			expr.symbols().forEach((s)=>{
-				funPar += s +','
-			})
-			f = expr.toJSFunction(funPar.substring(0, funPar.length -1));
-			
-			console.log(f(5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5))
-			return f //return the specified function to this formula
-		} 
+					//voy a la ventana de asignaturas al crear la asignatura
+					selectDIV(2) //descomentar al acabar los tests
+					console.log(listaAsignaturas)
+					mostrarListaAsignaturas()
+					//reseteo el form
+					document.getElementById('nomAsignaturaByFormula_f').value=''
+					document.getElementById('nomEscuelaByFormula_f').value=''
+					document.getElementById("Formula_f").value=''
+					document.getElementById("actos_listByFormula").innerHTML = "";
+				}else {
+					alert("Rellena todos los campos! 🤓")
+				}
+			}
 	</script>
 	<script>
 		class Acto {
