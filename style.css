@@ -11,6 +11,19 @@ li {
   border: none;
 }
 
+textarea, input { outline: none; }
+
+input[type="button"]
+{
+    border: none;
+    outline:none;
+}
+
+input:focus {
+   outline: none;
+   background-color: #fbfbfb;
+}
+
 body {
     margin: 0em auto;
     height: 100%;

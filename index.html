@@ -75,11 +75,13 @@
 					<ul	class="lin">
 						<li id="button_asignatura" class="button_menu" onclick="selectDIV(2); ">Asignaturas</li>
 					</ul>
-					<ul	class="lin">
-						<li id="button_add_asignatura" class="button_menu" onclick="selectDIV(3)">Crear asignatura</li>
-					</ul>
+					<!--
+					-->
 					<ul class="lin">
-						<li id="button_add_asignatura_by_formula" class="button_menu" onclick="selectDIV(6)">Crear con fórmula</li>
+						<li id="button_add_asignatura_by_formula" class="button_menu" onclick="selectDIV(6)">Crear asignatura</li>
+					</ul>
+					<ul	class="lin">
+						<li id="button_inter_pg" class="button_menu" onclick="">PG de interés</li>
 					</ul>
 				</div>
 			</div>
@@ -132,7 +134,7 @@
 				</div>
 			</div>
 			
-			<!--Crear asignatura-->
+			<!--Crear asignatura
 			<div class="col-md-10 col-12 programa" id="creaAsignatura">
 				<div class="asignaturas_title">
 					<h1 style="margin-top:5vh;" class="title_style">Crear asignatura</h1>
@@ -217,7 +219,7 @@
 			        });
 		        }
 			</script>
-
+			-->
 
 			<!--Calcular Asignatura-->
 			<div class="col-md-10 col-12 programa asignaturas_list_div" id="calcularAsignatura">
@@ -312,7 +314,7 @@
 						<div class="col-md-4 col-10 fila">
 								<h1 class="propiedades_enu">Fórmula de la Guia Docente:</h1>
 								<div class="help-tip">
-								    <p>Símbolos aceptados: ')','(','*','/','+','-' .</p>
+								    <p>Símbolos aceptados: ')','(','*','/','+','-','.' .</p>
 								</div>
 						</div>
 						<div class="col-md-8 col-12 fila">
@@ -401,7 +403,7 @@
 			document.getElementById('button_inicio').innerHTML = 'Inicio'
 			document.getElementById('button_asignatura').innerHTML = 'Asignaturas'
 			document.getElementById('button_add_asignatura').innerHTML = 'Crear asignatura'
-			document.getElementById('button_add_asignatura_by_formula').innerHTML = 'Crear con fórmula'
+			document.getElementById('button_add_asignatura_by_formula').innerHTML = 'Crear asignatura'
 
 			if(e == 1){
 				$('#asignaturas').css("display","none");
@@ -448,7 +450,7 @@
 				$('#calcularAsignatura').css("display","none");
 				$('#statsAsignatura').css("display","none");
 				$('#creaAsignaturaByFormula').css("display","block");
-				document.getElementById('button_add_asignatura_by_formula').innerHTML = '➤Crear con fórmula'
+				document.getElementById('button_add_asignatura_by_formula').innerHTML = '➤ Crear asignatura'
 			}
 		}
 
@@ -513,8 +515,7 @@
 						</li>`
 				idNota ++
 				document.getElementById("calcu_asig_list").insertAdjacentHTML("beforeend", act);
-				listaPorcentajesAsig.push(acto.getPorcentaje()); 
-				listaNotaMinimaAsig.push(acto.getNotaMin())
+				//listaNotaMinima.push(acto.getNotaMin())
 				actosCalculandoNota.push(acto)
 			})
 			console.log(listaNotaMinimaAsig)
@@ -564,6 +565,89 @@
 			//rellenar(this, ${acto})
 		}
 
+		function mvActo(examenes){
+			var rentable = 0
+			var valorMax = 0
+			for(let i = 0; i < examenes.lenght && examenes[i] <= 5; i ++){
+				examenes[i] += 1
+				if(valorMax < calculateFormula(asigACalcu.getFormula()+'',examenes)) {
+					valorMax = calculateFormula(asigACalcu.getFormula()+'',examenes)
+					rentable = i
+				}
+				examenes[i] -= 1
+			} 
+			return rentable
+		}
+
+		function calcularRecus() {
+			// Recupero los examenes suspendidos
+			var examenes = []
+			var cont = 0
+			examenesARecuperar = [] //lista que contiene a los examenes que hay que recuperar
+			var ac = asigACalcu.getActos()
+			var i = 0
+			ac.forEach((e) => {
+				//Obtenemos que primero hay que superar la nota mínima
+				if(e.getNotaMin() >= e.getNota()){
+					examenes.push(e.getNotaMin())
+					e.setRecu(true)
+				}else {
+					examenes.push(e.getNota())
+					//if(e.getNota() < 5.0)
+				}
+				i ++
+			})	
+			console.log("Examenes ::::::" + examenes)
+			// Algoritmo para mostrar las recus xd
+			// 1) Obtener las prioridades de los examenes
+			if(calculateFormula(asigACalcu.getFormula()+'',examenes) >= 5.0){
+				return
+				console.log("SALGO aprobado")
+			}else{
+				// 2) Subiremos en 0.1 la most valuable asignatura 
+				do{
+					var rentable = mvActo(examenes)
+					asigACalcu.getActos()[rentable].setRecu(true)
+					while(examenes[rentable] < 6.0 && calculateFormula(asigACalcu.getFormula()+'',examenes) < 5.0 ){
+						examenes[rentable] += 0.1	
+					}
+				}while(calculateFormula(asigACalcu.getFormula()+'',examenes) < 5.0 && mvActo(examenes))
+				// 3) si seguimos sin llegar al 5, a los actos que van a recuperación, les empezamos a subir poco a poco la nota
+				//if(calculateFormula(asigACalcu.getFormula()+'',examenes) >= 5.0){
+					asignaturas_recu_list = []
+					for(let o = 0; o < examenes.lenght; o ++){
+						var elemento = asigACalcu.getActos()[o]
+						console.log("Elemento de la recu: " + elemento)
+						var act = `<li class="lista_asignaturas_style">
+										<div class="row" style="display:flex; flex-direction:row;">
+											<div class="col-md-12" style="margin-top: 20px;">
+												<div class="row" style="text-align:center;">
+													<div class="col-md-4 col-12">
+														<h1 style="text-align:center; font-size:15px;vertical-align: center;"> 
+														<img src="./img/icons/exam.png" class="ico" alt="E">
+														<b>Acto:</b> ${elemento.getTipo()}</h1>
+													</div>
+													<div class="col-md-4 col-12">
+														<h1 style="text-align:center; font-size:15px;vertical-align: center;"> 
+														<img src="./img/icons/report.png" class="ico" alt="E">
+														<b>Nota:</b> ${elemento.getNota()}</h1>
+													</div>
+													<div class="col-md-4 col-12">
+														<h1 style="text-align:center; font-size:15px;vertical-align: center;"> 
+														<img src="./img/icons/books.png" class="ico" alt="E">
+														<b>5 sobre la final:</b> ${examenes[o]}</h1>
+													</div>
+												</div>
+											</div>
+										</div>
+									</li>`
+						document.getElementById("asignaturas_recu_list").insertAdjacentHTML("beforeend", act);
+					}
+				//}
+
+			}
+		}
+
 		function calcularNotaByFormula(){
 			notasTot = []
 			notasAptas = []
@@ -573,7 +657,7 @@
 			$('#error_calculo1_1').css("display","none");
 			var id = 0
 			for(id = 0; id < idNota; id++){
-				console.log("NOTA DEL ELEMENTO: "+document.getElementById('nota'+id).value)
+				//console.log("NOTA DEL ELEMENTO: "+document.getElementById('nota'+id).value)
 				if(isNaN(parseFloat((document.getElementById('nota'+id).value).replace(',','.')) )){//|| document.getElementById('nota'+id).value > 10.0)){
 					notasTot.push(0)
 					listaActosSuspendidosNP.push(id)
@@ -620,19 +704,17 @@
 
 			document.getElementById('necesitaRecuperar').innerHTML = 'Aprobado? : ' + recu;
 			document.getElementById("asignaturas_recu_list").innerHTML ="";
-			//rellenarRecus();
+			calcularRecus();
+			console.log("ENTRANDO A RELLENAR RECUS")
 		}
 
 		function calcularNota(){
 			notaFinal = 0
 			notaFinalBruta = 0
 			listaActosSuspendidos = [] //reseteo la lista de actos suspendidos para poder añadir actos a stats
-			listaActosSuspendidosNotas = []
 			listaActosSuspendidosMinimo = []
 			listaActosAprobados = []
-			listaActosAprobadosNotas = []
 			listaActosSuspendidosNP = []
-			listaActosSuspendidosAsig = []
 			listaActosNotas = []
 			//prooves that the formula is not included
 			if(asigACalcu.getFormula()){
@@ -685,8 +767,6 @@
 						$('#error_calculo_1').css("display","block");
 					}
 				}
-				//console.log("Notas ultima version acto: " +asigACalcu.getActos())
-				//console.log("FIN: " +notaFinal)
 				//RELLENO LA PARTE ESTADISTICA CON LAS NOTAS BASICAS
 				document.getElementById('notaFinalMediaBruta').innerHTML = 'Nota media bruta: ' + notaFinalBruta.toFixed(3); 
 				document.getElementById('notaFinalMediaAprobada').innerHTML = 'Nota media en mínimo superado: ' + notaFinal.toFixed(3);
@@ -719,7 +799,7 @@
 				setTimeout(()=>{
 					asignaturasActuales = []//reseteo la lista para usarla de nuevo
 					//limpio los actos
-					actos_list.innerHTML = ""
+					//actos_list.innerHTML = ""
 					//console.log("ASIG pos:" + asignaturasActuales)
 				},1);
 				//saveJSON(listaAsignaturas);
@@ -858,15 +938,14 @@
 	</script>
 	<script>
 		function deletear() {
-			document.getElementById("actos_list").removeChild(document.getElementById(this.parentNode.id))
+			//document.getElementById("actos_list").removeChild(document.getElementById(this.parentNode.id))
 		}
 		sumaPercent = 0
 		contador = 1;
-		asignaturasActuales = [] //contiene las asignaturas actuales
+		asignaturasActuales = [] 
 		//ADD ACT LIST ELEMENT
+		/*
 		function addActo() {
-			//var nomEscuela = document.getElementById("nomEscuela_f").value;
-			//var nomAsignatura = document.getElementById("nomAsignatura_f").value;
 			var tipoActo = document.getElementById("tipoActo_f").value;
 			var notaMin = document.getElementById("notaMin_f").value;
 			var porcentaje = document.getElementById("porcentaje_f").value;
@@ -916,8 +995,7 @@
 				console.log("rellena todo")
 				alert("Rellena todos los campos! 🤓")
 			}
-
-		}
+		}*/
 
 		function deleteAsigN(b){
 			var txt;
@@ -935,9 +1013,9 @@
 		    }
 		}
 
-		function mostrarListaAsignaturasN(){
+		/*function mostrarListaAsignaturasN(){
 
-			document.getElementById("actos_list").innerHTML = "";
+			//document.getElementById("actos_list").innerHTML = "";
 
 			asignaturasActuales.forEach(function(elemento){
 				var act = `<li class="lista_asignaturas_style">
@@ -969,15 +1047,15 @@
 										</div>
 									</div>
 								</li>`
-				document.getElementById("actos_list").insertAdjacentHTML("beforeend", act);
+				//document.getElementById("actos_list").insertAdjacentHTML("beforeend", act);
 			});
-		}
+		}*/
 	</script>
 
 	<script>
 		//relleno la lista de recuperacion
 		//asignaturas_recu_list
-		function rellenarRecus(){
+		function rellenarRecus1(){
 			//document.getElementById("asignaturas_recu_list").innerHTML = "";
 			var actosACalcula = asigACalcu.getActos()
 			console.log("A ACTUALES: "+listaActosARecuperar)//listaActosARecuperar)
@@ -1091,9 +1169,7 @@
    					}
                 	var asigNueva = new Asignatura(contenidoLectura[i].nomEscuela, contenidoLectura[i].nomAsig, actos1,0,0,contenidoLectura[i].formula)
                 	listaAsignaturasNuevas.push(asigNueva)
-   				}
-   				//listaAsignaturas = listaAsignaturasNuevas
-   				//listaAsignaturas = asigNueva
+   				}7
    				if (confirm("Sobreescribir la lista actual?")) {
    					listaAsignaturas = listaAsignaturasNuevas
    					mostrarListaAsignaturas()
@@ -1206,6 +1282,13 @@
 		//generating exams
 		function generateAsignaturasByFormula() {
 			actsByFormula = []
+			p1 = (document.getElementById("Formula_f").value).split('(')
+			p2 = (document.getElementById("Formula_f").value).split(')')
+			if(p1.length != p2.length) {
+				alert("Revisa la cantidad de paréntesis!")
+				return
+			}
+
 			getExamsFromFormula(document.getElementById("Formula_f").value).forEach((f) =>{
 				actsByFormula.push(new Acto(f,0,'formula'))
 			})
@@ -1257,7 +1340,7 @@
 					setTimeout(()=>{
 						asignaturasActuales = []//reseteo la lista para usarla de nuevo
 						//limpio los actos
-						actos_list.innerHTML = ""
+						//actos_listByFormula.innerHTML = ""
 						console.log("ASIG pos:" + asignaturasActuales)
 					},1);
 					//saveJSON(listaAsignaturas);
@@ -1284,6 +1367,7 @@
 				this.porcentaje = porcentaje;
 				this.nota = nota;
 				this.notaASacar = notaASacar;
+				this.recuperar = false;
 			}
 
 			toString() {
@@ -1321,6 +1405,14 @@
 
 			getNotaASacar() {
 				return this.notaASacar;
+			}
+
+			getRecu() {
+				return this.recuperar;	
+			}
+
+			setRecu(recu) {
+				this.recuperar = recu;
 			}
 		}
 
